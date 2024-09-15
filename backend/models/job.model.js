@@ -13,7 +13,7 @@ const jobSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    Salary:{
+    salary:{
         type:Number,
         required:true
     },
@@ -29,7 +29,7 @@ const jobSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
-    services:{
+    client:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Client',
         required:true
