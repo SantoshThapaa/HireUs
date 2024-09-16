@@ -104,9 +104,9 @@ export const logout = async (req,res)=> {
 
 export const updateProfile = async (req, res) => {
     try {
-        const { fullname, email, phoneNumber, bio, skills } = req.body;
+        const { fullname, email, phoneNumber, skills,bio } = req.body;
         const file = req.file;
-        if(!fullname || !email || !phoneNumber || !bio || !skills ){
+        if(!fullname || !email || !phoneNumber || !skills ||  !bio){
             return res.status(400).json({
                 message:"Something is missing",
                 success:false
