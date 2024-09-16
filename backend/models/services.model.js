@@ -21,5 +21,4 @@ const servicesSchema = new mongoose.Schema({
         required:true
     }
 },{timestamps:true})
-
 export const Services = mongoose.model("Services", servicesSchema);
