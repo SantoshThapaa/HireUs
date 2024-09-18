@@ -11,15 +11,10 @@ export const postJob = async (req, res) => {
                 success:false
             })
         };
-
-        // Check if requirements is a string and split, or use it directly if it's an array
-        const formattedRequirements = Array.isArray(requirements) ? requirements : requirements.split(",");
-
-
         const job = await Job.create({
             title,
             description, 
-            requirements: formattedRequirements,
+            requirements: requirements.split(","), 
             salary: Number(salary), 
             location, 
             jobType, 
