@@ -10,6 +10,9 @@ import { useState } from "react";
 import { USER_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/authSlice";
 
 const Signup = () => {
     const [input, setInput] = useState({
@@ -21,6 +24,8 @@ const Signup = () => {
         file:""
     });
 
+    const { loading } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
@@ -55,6 +60,8 @@ const Signup = () => {
         } catch(error){
             console.log(error);
             toast.error(error.response.data.message);
+        }finally {
+            dispatch(setLoading(false));
         }
     }
 
@@ -99,7 +106,10 @@ const Signup = () => {
                                 onChange={changeFileHandler}className="cursor-pointer" />
                         </div>
                     </div>
-                    <Button type="submit" className="w-full my-4 bg-[#45cfc1] hover:bg-[#32b4a7]">Signup</Button>
+                    {
+                        loading ? <Button className="w-full my-4"> <Loader2 className="mr-2 h-4 w-4 animate-spin" />Please Wait</Button>:<Button type="submit" className="w-full my-4 bg-[#45cfc1] hover:bg-[#32b4a7]">Signup</Button>
+
+                    }
                     <span className="text-sm">Already have an account? <Link to="/login" className="text-blue-600">Login</Link></span>
                 </form>
             </div>
