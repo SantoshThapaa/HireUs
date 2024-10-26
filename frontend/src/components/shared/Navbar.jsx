@@ -1,13 +1,23 @@
-// import React from 'react'
-
-import { LogOut, User2 } from "lucide-react";
+// import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Link } from "react-router-dom";
+import { LogOut, User2 } from "lucide-react";
+import { MdLanguage } from "react-icons/md";
 
 const Navbar = () => {
-    const user = false;
+    const { t, i18n } = useTranslation();
+    const user = false; // Replace with actual user state if available
+    const username = "Santosh Thapa"; // Replace with dynamic username
+    const userAvatar = "https://github.com/shadcn.png"; // Replace with dynamic avatar URL
+
+    // Function to toggle language between English, Nepali, and Hindi
+    const changeLanguage = (lang) => {
+        i18n.changeLanguage(lang); // Change the language based on selected option
+    };
+
     return (
         <div className="bg-white">
             <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
@@ -17,43 +27,41 @@ const Navbar = () => {
                 </div>
                 <div className="flex items-center gap-12">
                     <ul className="flex font-medium items-center gap-5">
-                        <li>Home</li>
-                        <li>Jobs</li>
-                        <li>Browse</li>
+                        <li>{t('home')}</li>
+                        <li>{t('jobs')}</li>
+                        <li>{t('browse')}</li>
                     </ul>
                     {
                         !user ? (
                             <div className="flex items-center gap-2">
-                                <Link to="/login"><Button variant="outline">Login</Button></Link>
-                                <Link to="/signup"><Button className="bg-[#45cfc1] hover:bg-[#32b4a7]">Signup </Button></Link>
+                                <Link to="/login"><Button variant="outline">{t('login')}</Button></Link>
+                                <Link to="/signup"><Button className="bg-[#45cfc1] hover:bg-[#32b4a7]">{t('signup')}</Button></Link>
                             </div>
                         ) : (
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className="cursor-pointer">
-                                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                        <AvatarImage src={userAvatar} alt={username} />
                                     </Avatar>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
-                                    <div className="">
-                                        <div className="flex gap-4 space-y-2">
-                                            <Avatar className="cursor-pointer">
-                                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                            </Avatar>
-                                            <div>
-                                                <h4 className="font-medium">Santosh Thapa</h4>
-                                                <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
-                                            </div>
+                                    <div className="flex gap-4 space-y-2">
+                                        <Avatar>
+                                            <AvatarImage src={userAvatar} alt={username} />
+                                        </Avatar>
+                                        <div>
+                                            <h4 className="font-medium">{username}</h4>
+                                            <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
                                         </div>
                                     </div>
                                     <div className="flex flex-col my-2 text-gray-600">
                                         <div className="flex w-fit items-center gap-2 cursor-pointer">
                                             <User2 />
-                                            <Button variant="link">View Profile</Button>
+                                            <Button variant="link">{t('viewProfile')}</Button>
                                         </div>
                                         <div className="flex w-fit items-center gap-2 cursor-pointer">
                                             <LogOut />
-                                            <Button variant="link">Logout</Button>
+                                            <Button variant="link">{t('logout')}</Button>
                                         </div>
                                     </div>
                                 </PopoverContent>
@@ -61,10 +69,41 @@ const Navbar = () => {
                         )
                     }
 
+                    {/* Language Dropdown with Icon Only */}
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" className="ml-4 flex items-center">
+                                <MdLanguage className="text-lg" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-40 bg-white border border-gray-300 rounded-lg shadow-lg">
+                            <ul className="flex flex-col p-2">
+                                <li
+                                    className="cursor-pointer py-2 px-4 rounded hover:bg-gray-100 transition duration-200"
+                                    onClick={() => changeLanguage('en')}
+                                >
+                                    English
+                                </li>
+                                <li
+                                    className="cursor-pointer py-2 px-4 rounded hover:bg-gray-100 transition duration-200"
+                                    onClick={() => changeLanguage('ne')}
+                                >
+                                    नेपाली
+                                </li>
+                                <li
+                                    className="cursor-pointer py-2 px-4 rounded hover:bg-gray-100 transition duration-200"
+                                    onClick={() => changeLanguage('hi')}
+                                >
+                                    हिन्दी
+                                </li>
+                            </ul>
+                        </PopoverContent>
+                    </Popover>
+
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;
