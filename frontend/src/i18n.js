@@ -34,8 +34,27 @@ i18next
                     phonePlaceholder: "+977-00000000",
                     passwordPlaceholder: "******",
                     profile: "Profile",
-                    alreadyHaveAccount: "Already have an account?"
-                }
+                    alreadyHaveAccount: "Already have an account?",
+                    elevateProfessionalJourney: "Elevate your professional journey",
+                    ultimateSolution: "Ultimate solution for finding nurses and maid",
+                    getAFullTime: "Get a Full-time",
+                    maid: "Maid",
+                    orProfessional: "or Professional",
+                    nurse: "Nurse",
+                    onlineIn5: "Online in 5 minutes. Cancel anytime",
+                    findTheMaidOrNurses: "Find the maid or nurses",
+                    categories: {
+                        clinicalNurseSpecialist: "Clinical Nurse Specialist",
+                        cardiacNurse: "Cardiac Nurse",
+                        babySitterService: "Baby Sitter Service",
+                        nurseMidwife: "Nurse Midwife",
+                        officeMaidService: "Office Maid Service",
+                        mentalHealthNurse: "Mental Health Nurse",
+                        oncologyNurse: "Oncology Nurse",
+                        houseMaid: "House Maid",
+                        caretaker: "Caretaker"
+                    },
+                },
             },
             ne: {
                 translation: {
@@ -60,8 +79,27 @@ i18next
                     phonePlaceholder: "+977-00000000",
                     passwordPlaceholder: "******",
                     profile: "प्रोफाइल",
-                    alreadyHaveAccount: "पहिल्यै खाता छ?"
-                }
+                    alreadyHaveAccount: "पहिल्यै खाता छ?",
+                    elevateyourprofessionaljourney: "आफ्नो व्यावसायिक यात्रालाई उचाइमा पुर्याउनुहोस्",
+                    ultimateSolution: "नर्स र कामदार खोज्नको लागि उत्कृष्ट समाधान",
+                    getAFullTime: "पूर्ण समयको लागि प्राप्त गर्नुहोस्",
+                    maid: "कामदार",
+                    orProfessional: "वा व्यावसायिक",
+                    nurse: "नर्स",
+                    onlineIn5: "५ मिनेटमा अनलाइन। कुनै पनि समय रद्द गर्नुहोस्",
+                    findTheMaidOrNurses: "कामदार वा नर्स खोज्नुहोस्",
+                    categories: {
+                        clinicalNurseSpecialist: "क्लिनिकल नर्स विशेषज्ञ",
+                        cardiacNurse: "हृदय नर्स",
+                        babySitterService: "शिशु हेरचाह सेवा",
+                        nurseMidwife: "नर्स मिडवाइफ",
+                        officeMaidService: "अफिस कामदार सेवा",
+                        mentalHealthNurse: "मानसिक स्वास्थ्य नर्स",
+                        oncologyNurse: "अन्कोलोजी नर्स",
+                        houseMaid: "गृह कामदार",
+                        caretaker: "हेरचाहकर्ता"
+                    },
+                },
             },
             hi: {
                 translation: {
@@ -86,8 +124,27 @@ i18next
                     phonePlaceholder: "+977-00000000",
                     passwordPlaceholder: "******",
                     profile: "प्रोफाइल",
-                    alreadyHaveAccount: "क्या आपके पास पहले से खाता है?"
-                }
+                    alreadyHaveAccount: "क्या आपके पास पहले से खाता है?",
+                    elevateProfessionalJourney: "अपने व्यावसायिक सफर को ऊंचाई पर ले जाएं",
+                    ultimateSolution: "नर्स और नौकरानी खोजने का सर्वोत्तम समाधान",
+                    getAFullTime: "पूर्णकालिक प्राप्त करें",
+                    maid: "नौकरानी",
+                    orProfessional: "या पेशेवर",
+                    nurse: "नर्स",
+                    onlineIn5: "5 मिनट में ऑनलाइन। कभी भी रद्द करें",
+                    findTheMaidOrNurses: "नौकरानी या नर्स खोजें",
+                    categories: {
+                        clinicalNurseSpecialist: "क्लिनिकल नर्स विशेषज्ञ",
+                        cardiacNurse: "हृदय रोग नर्स",
+                        babySitterService: "बच्चों की देखभाल सेवा",
+                        nurseMidwife: "नर्स मिडवाइफ",
+                        officeMaidService: "ऑफिस नौकरानी सेवा",
+                        mentalHealthNurse: "मानसिक स्वास्थ्य नर्स",
+                        oncologyNurse: "ऑन्कोलॉजी नर्स",
+                        houseMaid: "घरेलू नौकरानी",
+                        caretaker: "देखभाल करने वाला",
+                    },
+                },
             }
         }
     });
