@@ -21,7 +21,7 @@ i18next
                     logout: "Logout",
                     loginTitle: "Login",
                     email: "Email",
-                    password: "Password",
+                    password: "Password", 
                     worker: "Worker",
                     recruiter: "Recruiter",
                     pleaseWait: "Please Wait",
