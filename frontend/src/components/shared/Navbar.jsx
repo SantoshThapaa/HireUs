@@ -27,10 +27,23 @@ const Navbar = () => {
                 </div>
                 <div className="flex items-center gap-12">
                     <ul className="flex font-medium items-center gap-5">
-                        <li>{t('home')}</li>
-                        <li>{t('jobs')}</li>
-                        <li>{t('browse')}</li>
+                        <li>
+                            <Link href="#home" className="hover:text-[#45cfc1]">
+                                {t('home')}
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="#jobs" className="hover:text-[#45cfc1]">
+                                {t('jobs')}
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="#browse" className="hover:text-[#45cfc1]">
+                                {t('browse')}
+                            </Link>
+                        </li>
                     </ul>
+
                     {
                         !user ? (
                             <div className="flex items-center gap-2">

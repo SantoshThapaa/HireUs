@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import HeroSection from "./HeroSection";
 import LatestJobs from "./LatestJobs";
 import Navbar from "./shared/Navbar";
+import TrustAndSafety from "./TrustandSafety";
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
         <HeroSection/>
         {/* <CategoryCarousel /> */}
         <LatestJobs />
+        <TrustAndSafety/>
         <Footer />
 
     </div>

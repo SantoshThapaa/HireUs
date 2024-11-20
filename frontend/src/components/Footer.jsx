@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { FaFacebookSquare, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'; 
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 function Footer() {
   const { t } = useTranslation();
@@ -15,7 +15,7 @@ function Footer() {
               <p className="text-md text-white">
                 {t('footer.exploreAndLearn')}
               </p>
-              <div className="flex space-x-4">
+              <div className="flex space-x-6 justify-center items-left">
                 {[
                   { href: '#', icon: <FaFacebookSquare />, label: 'Facebook' },
                   { href: '#', icon: <FaYoutube />, label: 'YouTube' },
@@ -25,7 +25,7 @@ function Footer() {
                   <a
                     key={index}
                     href={item.href}
-                    className="text-[#95FFE1] hover:text-primary-foreground/80"
+                    className="text-[#4273a1] hover:text-[#363535] text-2xl transform transition-all duration-300 ease-in-out hover:scale-110"
                   >
                     {item.icon}
                     <span className="sr-only">{item.label}</span>
@@ -34,7 +34,7 @@ function Footer() {
               </div>
             </CardContent>
             <CardFooter>
-              <p className="text-md text-white">© 2024 {t('footer.quizu')}. {t('footer.allRightsReserved')}</p>
+              <p className="text-md text-white">© 2024 {t('footer.SARATHI')}. {t('footer.allRightsReserved')}</p>
             </CardFooter>
           </Card>
 
@@ -46,7 +46,7 @@ function Footer() {
             <CardContent>
               <nav>
                 <ul className="space-y-1 text-white text-sm">
-                  {['home', 'about', 'dashboard', 'studyMaterial', 'news'].map((key) => (
+                  {['home', 'about', 'jobs', 'browse'].map((key) => (
                     <li key={key}>
                       <a href="#" className="hover:underline">{t(`footer.${key}`)}</a>
                     </li>
@@ -83,8 +83,8 @@ function Footer() {
               </CardHeader>
               <CardContent className="space-y-1 text-white text-sm">
                 <p>{t('footer.address')}</p>
-                <p>+977 01 5891517</p>
-                <p>support@quizu.com.np</p>
+                <p>+977 0000000000</p>
+                <p>support@Sarathi.com.np</p>
               </CardContent>
             </Card>
           </div>
@@ -92,11 +92,12 @@ function Footer() {
       </div>
 
       {/* Bottom Section */}
-      <div className="py-8 text-center shadow-lg shadow-[#95FFE1]/50">
-  <h1 className="text-6xl text-[#95FFE1] font-bold tracking-[0.3em] sm:text-8xl md:text-9xl lg:text-[10rem]">
-    {t('SARATHI')}
-  </h1>
-</div>
+      <div className="py-8 text-center shadow-lg shadow-blue-500/50">
+        <h1 className="text-6xl text-[#95FFE1] font-bold tracking-[0.3em] sm:text-8xl md:text-9xl lg:text-[10rem]">
+          {t('SARATHI')}
+        </h1>
+      </div>
+
     </footer>
   );
 }
