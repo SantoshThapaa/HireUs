@@ -8,7 +8,7 @@ const TrustAndSafety = () => {
     <section className="bg-white py-12">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-4xl font-bold mb-5">
-          <span className="text-[#45cfc1]">{t('trustSafety')}</span>
+          <span className="text-[#45cfc1]">{t('Why Choose us?')}</span>
         </h1>
         <p className="text-gray-600 mb-8 text-lg">
           {t('description').split('\n').map((line, index) => (
@@ -19,7 +19,7 @@ const TrustAndSafety = () => {
           ))}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {/* Background Checks */}
           <div className="flex flex-col items-center">
             <div className="w-25 h-25 flex justify-center items-center transition-transform duration-300 ease-in-out hover:scale-110">
@@ -64,6 +64,5 @@ const TrustAndSafety = () => {
     </section>
   );
 };
-
 
 export default TrustAndSafety;

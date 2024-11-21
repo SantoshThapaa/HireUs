@@ -10,7 +10,7 @@ function HeroSection() {
 
   return (
     <section
-      id="home"
+      id="#home"
       className="relative flex flex-col-reverse lg:flex-row gap-5 items-center border-collapse justify-between bg-white p-4 lg:p-12"
     >
       {/* Left Side Content */}
