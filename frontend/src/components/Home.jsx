@@ -3,6 +3,7 @@
 import About from "./About";
 import Footer from "./Footer";
 import HeroSection from "./HeroSection";
+import ContentSection from "./ContentSection";
 import LatestJobs from "./LatestJobs";
 import Navbar from "./shared/Navbar";
 import Slider from "./Slider";
@@ -14,6 +15,7 @@ const Home = () => {
         <Navbar/>
         <HeroSection/>
         {/* <CategoryCarousel /> */}
+        <ContentSection/>
         <LatestJobs />
         <Slider/>
         <About/>

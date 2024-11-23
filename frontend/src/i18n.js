@@ -53,7 +53,9 @@ i18next
                     hrUploadCv: "HR team upload sorted CVs",
                     aboutUs: "About Us",
                     faq: "FAQ",
-
+                    professionalStaff: "Professional Staff",
+                    nursesAndMaids: "Nurses and Maids",
+                    age: "Age",
                     "questions": {
                         "tadbeer": "What is Sarathi?",
                         "appUse": "What services does Sarathi provide?",
