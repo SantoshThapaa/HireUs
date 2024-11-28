@@ -8,43 +8,51 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 const employees = [
   {
-    name: "Fulkumari",
+    name: "Fulkumari Gurung",
     age: 40,
+    job: "Maid",
     image: "/women1.jpg",
   },
   {
-    name: "Sophia",
+    name: "Sophia Bhujel",
     age: 32,
+    job: "Nurse",
     image: "/women2.jpg",
   },
   {
     name: "Emma",
     age: 25,
+    job: "Maid",
     image: "/women1.jpg",
   },
   {
     name: "Liam",
     age: 35,
+    job: "Nurseh",
     image: "/women2.jpg",
   },
   {
     name: "Emma",
     age: 25,
+    job: "Maid",
     image: "/women1.jpg",
   },
   {
     name: "Liam",
     age: 35,
+    job: "Maid",
     image: "/women2.jpg",
   },
   {
     name: "Emma",
     age: 25,
+    job: "Nyani",
     image: "/women1.jpg",
   },
   {
     name: "Liam",
     age: 35,
+    job: "Caretaker",
     image: "/women2.jpg",
   },
 ];
@@ -54,7 +62,7 @@ const Slider = () => {
 
   return (
     <section className="py-16 min-h-screen flex items-center justify-center">
-      <div className="container mx-auto text-center">
+      <div className="container mx-auto px-4 text-center">
         <h3 className="text-lg text-gray-500 mb-2">- {t("professionalStaff")} -</h3>
         <h1 className="text-3xl font-bold text-primary mb-8">
           {t("nursesAndMaids")}
@@ -72,6 +80,12 @@ const Slider = () => {
               stretch: 0,
               depth: 100,
               modifier: 2.5,
+            }}
+            breakpoints={{
+              320: { slidesPerView: 1, spaceBetween: 20 },
+              640: { slidesPerView: 1.5, spaceBetween: 20 },
+              768: { slidesPerView: 2, spaceBetween: 30 },
+              1024: { slidesPerView: 3, spaceBetween: 40 },
             }}
             pagination={{
               clickable: true,
@@ -98,21 +112,24 @@ const Slider = () => {
                       {employee.name}
                     </CardTitle>
                     <p className="text-gray-500">
-                      {t("age")}: {employee.age}
+                      {t("age")}: {employee.age},
+                      <br />
+                      {t("job")}: {employee.job}
                     </p>
                   </CardContent>
                 </Card>
               </SwiperSlide>
             ))}
-            <div className="swiper-button-prev slider-arrow bg-[#45cfc1] shadow-md mt-8"></div>
-            <div className="swiper-button-next slider-arrow bg-[#45cfc1] shadow-md mt-8"></div>
+            <div className="swiper-button-prev slider-arrow bg-[#ebeded] shadow-md mt-8"></div>
+            <div className="swiper-button-next slider-arrow bg-[#ebeded] shadow-md mt-8"></div>
             {/* Swiper Pagination */}
-            <div className="swiper-pagination mt-3"></div>
+            <div className="swiper-pagination mt-6"></div>
           </Swiper>
         </div>
       </div>
     </section>
   );
 };
+
 
 export default Slider;

@@ -56,6 +56,7 @@ i18next
                     professionalStaff: "Professional Staff",
                     nursesAndMaids: "Nurses and Maids",
                     age: "Age",
+                    job: "Job",
                     "questions": {
                         "tadbeer": "What is Sarathi?",
                         "appUse": "What services does Sarathi provide?",
