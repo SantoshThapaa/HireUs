@@ -6,12 +6,15 @@ import Signup from "./components/auth/Signup";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { I18nextProvider } from 'react-i18next'; // Import I18nextProvider
 import i18next from './i18n'; // Import your i18n configuration
+import Jobs from "./components/Jobs";
+import Browse from "./components/Browse";
+import Profile from "./components/Profile";
 
 // Set up routes
 const appRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Home />
+    element: <Home/>
   },
   {
     path: '/login',
@@ -21,10 +24,18 @@ const appRouter = createBrowserRouter([
     path: '/signup',
     element: <Signup />
   },
-  // {
-  //   path: '*',
-  //   element: <NotFound /> // Add a 404 route for undefined paths
-  // }
+  {
+    path: '/jobs',
+    element: <Jobs/> 
+  },
+  {
+    path: '/browse',
+    element: <Browse/> 
+  },
+  {
+    path: '/profile',
+    element: <Profile/> 
+  }
 ]);
 
 // Define App component
