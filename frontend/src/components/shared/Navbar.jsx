@@ -7,12 +7,11 @@ import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { MdLanguage } from "react-icons/md";
 import { FiMenu } from "react-icons/fi"; // Importing hamburger icon
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const user = false; // Replace with actual user state if available
-  const username = "Santosh Thapa"; // Replace with dynamic username
-  const userAvatar = "https://github.com/shadcn.png"; // Replace with dynamic avatar URL
+  const {user} = useSelector(store=> store.auth); 
 
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State for managing menu visibility
 
@@ -45,17 +44,17 @@ const Navbar = () => {
         <div className={`lg:flex items-center gap-12 ${isMenuOpen ? "flex" : "hidden"} lg:flex`}>
           <ul className="flex font-medium items-center gap-5">
             <li>
-              <Link to="#home" className="hover:text-[#45cfc1]">
+              <Link to="/" className="hover:text-[#45cfc1]">
                 {t('home')}
               </Link>
             </li>
             <li>
-              <Link to="#jobs" className="hover:text-[#45cfc1]">
+              <Link to="/jobs" className="hover:text-[#45cfc1]">
                 {t('jobs')}
               </Link>
             </li>
             <li>
-              <Link to="#browse" className="hover:text-[#45cfc1]">
+              <Link to="/browse" className="hover:text-[#45cfc1]">
                 {t('browse')}
               </Link>
             </li>
@@ -71,23 +70,23 @@ const Navbar = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar className="cursor-pointer">
-                    <AvatarImage src={userAvatar} alt={username} />
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                   <div className="flex gap-4 space-y-2">
                     <Avatar>
-                      <AvatarImage src={userAvatar} alt={username} />
+                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                     </Avatar>
                     <div>
-                      <h4 className="font-medium">{username}</h4>
+                      <h4 className="font-medium">Santosh Thapa</h4>
                       <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
                     </div>
                   </div>
                   <div className="flex flex-col my-2 text-gray-600">
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <User2 />
-                      <Button variant="link">{t('viewProfile')}</Button>
+                      <Button variant="link"><Link to="/profile">{t('viewProfile')}</Link></Button>
                     </div>
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
