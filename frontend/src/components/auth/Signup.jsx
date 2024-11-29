@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
@@ -25,7 +25,7 @@ const Signup = () => {
         file: ""
     });
 
-    const { loading } = useSelector(store => store.auth);
+    const { loading, user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -49,6 +49,7 @@ const Signup = () => {
             formData.append("file", input.file);
         }
         try {
+            dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -66,6 +67,11 @@ const Signup = () => {
             dispatch(setLoading(false));
         }
     }
+    useEffect(()=>{
+        if(user){
+            navigate("/");
+        }
+    },[])
 
     return (
         <div>
