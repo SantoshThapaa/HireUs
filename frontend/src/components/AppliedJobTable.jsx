@@ -19,7 +19,7 @@ const AppliedJobTable = () => {
             [1, 2, 3].map((item, index) => {
               return (
                 <TableRow key={index}>
-                  <TableCell>17-12-2024</TableCell>
+                  <TableCell>18-12-2024</TableCell>
                   <TableCell>Office Maid</TableCell>
                   <TableCell>Technergy Company</TableCell>
                   <TableCell className="text-[#5fa794] text-right"><Badge>Selected</Badge></TableCell>
