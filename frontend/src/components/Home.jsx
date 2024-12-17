@@ -1,7 +1,7 @@
 
 // import CategoryCarousel from "./CategoryCarousel";
 import About from "./About";
-import Footer from "./Footer";
+import Footer from "./shared/Footer";
 import HeroSection from "./HeroSection";
 import ContentSection from "./ContentSection";
 import LatestJobs from "./LatestJobs";

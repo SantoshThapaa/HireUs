@@ -9,6 +9,7 @@ import i18next from './i18n'; // Import your i18n configuration
 import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
+import JobDescription from "./components/JobDescription";
 
 // Set up routes
 const appRouter = createBrowserRouter([
@@ -35,6 +36,10 @@ const appRouter = createBrowserRouter([
   {
     path: '/profile',
     element: <Profile/> 
+  },
+  {
+    path: '/description/:id',
+    element: <JobDescription/> 
   }
 ]);
 
