@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { MdLanguage } from "react-icons/md";
 import { FiMenu } from "react-icons/fi"; // Importing hamburger icon
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_API_END_POINT } from '@/utils/constant';
+import { setUser } from '@/redux/authSlice';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -24,7 +28,21 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = async () => {
+    try {
+      const res = await axios.get(`${USER_API_END_POINT}/logout`, {withCredentials:true});
+      if(res.data.success){
+        dispatch(setUser(null));
+        navigate('/');
+        toast.success(res.data.message);
+      }
+    }catch (error){
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
   return (
     <div className="bg-white">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
@@ -90,7 +108,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
-                      <Button variant="link">{t('logout')}</Button>
+                      <Button onClick={logoutHandler} variant="link">{t('logout')}</Button>
                     </div>
                   </div>
                 </PopoverContent>
