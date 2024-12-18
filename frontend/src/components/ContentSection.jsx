@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const MaidServiceSection = () => {
     return (
@@ -11,9 +12,11 @@ const MaidServiceSection = () => {
                 <p className="text-base sm:text-lg text-gray-600 mb-6">
                     Book a professional housekeeper for your daily chores.
                 </p>
-                <Button className="bg-[#45cfc1] text-black px-4 sm:px-6 py-2 rounded-lg shadow-md hover:bg-yellow-600 transition-colors duration-300">
-                    Book Now
-                </Button>
+                <Link to="/jobs">
+            <Button className="bg-[#45cfc1] text-black px-4 sm:px-6 py-2 rounded-lg shadow-md hover:bg-yellow-600 transition-colors duration-300">
+                Book Now
+            </Button>
+        </Link>
             </div>
 
             {/* Image/Video Section */}
