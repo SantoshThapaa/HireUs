@@ -67,11 +67,12 @@ const Signup = () => {
             dispatch(setLoading(false));
         }
     }
-    useEffect(()=>{
-        if(user){
+
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[])
+    }, [user]);  // Add user to dependency array
 
     return (
         <div>
@@ -98,20 +99,17 @@ const Signup = () => {
                     <div className="items-center flex justify-between">
                         <RadioGroup className="flex items-center gap-4 my-5">
                             <div className="flex items-center space-x-2">
-                                <Input type="radio" name="role" value="worker" checked={input.role === 'worker'}
-                                    onChange={changeEventHandler} className="cursor-pointer" />
+                                <Input type="radio" name="role" value="worker" id="r1" checked={input.role === 'worker'} onChange={changeEventHandler} />
                                 <Label htmlFor="r1">{t('worker')}</Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <Input type="radio" name="role" value="recruiter" checked={input.role === 'recruiter'}
-                                    onChange={changeEventHandler} className="cursor-pointer" />
+                                <Input type="radio" name="role" value="recruiter" id="r2" checked={input.role === 'recruiter'} onChange={changeEventHandler} />
                                 <Label htmlFor="r2">{t('recruiter')}</Label>
                             </div>
                         </RadioGroup>
                         <div className="flex items-center gap-2">
                             <Label>{t('profile')}</Label>
-                            <Input accept="image/*" type="file" checked={input.role === 'worker'}
-                                onChange={changeFileHandler} className="cursor-pointer" />
+                            <Input accept="image/*" type="file" checked={input.role === 'worker'} onChange={changeFileHandler} />
                         </div>
                     </div>
                     {
@@ -122,7 +120,7 @@ const Signup = () => {
                 </form>
             </div>
         </div>
-    )
+    );
 }
 
 export default Signup;
