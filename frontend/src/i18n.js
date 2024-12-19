@@ -13,6 +13,7 @@ i18next
             en: {
                 translation: {
                     home: "Home",
+                    companies: "Companies",
                     jobs: "Jobs",
                     browse: "Browse",
                     login: "Login",
@@ -118,6 +119,7 @@ i18next
             ne: {
                 translation: {
                     home: "गृहपृष्ठ",
+                    companies: "कम्पनीहरू",
                     jobs: "काम",
                     browse: "ब्राउज गर्नुहोस्",
                     login: "लगइन",
@@ -219,6 +221,7 @@ i18next
                 translation: {
                     home: "होम",
                     jobs: "नौकरियां",
+                    companies: "कंपनियां",
                     browse: "ब्राउज़ करें",
                     login: "लॉगिन",
                     signup: "साइन अप करें",

@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const {user} = useSelector(store=> store.auth); 
+  const { user } = useSelector(store => store.auth);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State for managing menu visibility
 
@@ -32,13 +32,13 @@ const Navbar = () => {
   const navigate = useNavigate();
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${USER_API_END_POINT}/logout`, {withCredentials:true});
-      if(res.data.success){
+      const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
+      if (res.data.success) {
         dispatch(setUser(null));
         navigate('/');
         toast.success(res.data.message);
       }
-    }catch (error){
+    } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
     }
@@ -61,21 +61,41 @@ const Navbar = () => {
         {/* Navigation Links for Desktop and Mobile */}
         <div className={`lg:flex items-center gap-12 ${isMenuOpen ? "flex" : "hidden"} lg:flex`}>
           <ul className="flex font-medium items-center gap-5">
-            <li>
-              <Link to="/" className="hover:text-[#45cfc1]">
-                {t('home')}
-              </Link>
-            </li>
-            <li>
-              <Link to="/jobs" className="hover:text-[#45cfc1]">
-                {t('jobs')}
-              </Link>
-            </li>
-            <li>
-              <Link to="/browse" className="hover:text-[#45cfc1]">
-                {t('browse')}
-              </Link>
-            </li>
+            {
+              user && user.role === 'recruiter' ? (
+                <>
+                  <li>
+                    <Link to="/admin/services" className="hover:text-[#45cfc1]">
+                      {t('services')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/jobs" className="hover:text-[#45cfc1]">
+                      {t('jobs')}
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/" className="hover:text-[#45cfc1]">
+                      {t('home')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/jobs" className="hover:text-[#45cfc1]">
+                      {t('jobs')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/browse" className="hover:text-[#45cfc1]">
+                      {t('browse')}
+                    </Link>
+                  </li>
+                </>
+              )
+            }
+
           </ul>
 
           {
@@ -88,24 +108,29 @@ const Navbar = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar className="cursor-pointer">
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                   <div className="flex gap-4 space-y-2">
                     <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                      <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
                     </Avatar>
                     <div>
-                      <h4 className="font-medium">Santosh Thapa</h4>
-                      <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
+                      <h4 className="font-medium">{user?.fullname}</h4>
+                      <p className="text-sm text-muted-foreground">{user?.profile?.bio}</p>
                     </div>
                   </div>
                   <div className="flex flex-col my-2 text-gray-600">
-                    <div className="flex w-fit items-center gap-2 cursor-pointer">
-                      <User2 />
-                      <Button variant="link"><Link to="/profile">{t('viewProfile')}</Link></Button>
-                    </div>
+                    {
+                      user && user.role == 'worker' && (
+                        <div className="flex w-fit items-center gap-2 cursor-pointer">
+                          <User2 />
+                          <Button variant="link"><Link to="/profile">{t('viewProfile')}</Link></Button>
+                        </div>
+                      )
+                    }
+
                     <div className="flex w-fit items-center gap-2 cursor-pointer">
                       <LogOut />
                       <Button onClick={logoutHandler} variant="link">{t('logout')}</Button>

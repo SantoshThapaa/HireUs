@@ -10,6 +10,9 @@ import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
 import JobDescription from "./components/JobDescription";
+import Services from "./components/admin/Services";
+import ServicesCreate from "./components/admin/ServicesCreate";
+import ServicesSetup from "./components/admin/ServicesSetup";
 
 // Set up routes
 const appRouter = createBrowserRouter([
@@ -40,6 +43,20 @@ const appRouter = createBrowserRouter([
   {
     path: '/description/:id',
     element: <JobDescription/> 
+  },
+
+  //admin part here
+  {
+    path: '/admin/services',
+    element: <Services/> 
+  },
+  {
+    path: '/admin/services/create',
+    element: <ServicesCreate/> 
+  },
+  {
+    path: '/admin/services/:id',
+    element: <ServicesSetup/> 
   }
 ]);
 
