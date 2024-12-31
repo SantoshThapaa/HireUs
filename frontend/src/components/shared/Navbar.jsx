@@ -47,9 +47,15 @@ const Navbar = () => {
     <div className="bg-white">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
         {/* Logo design */}
-        <div>
-          <h1 className="text-2xl font-bold"><span className="text-[#6da9e5] text-4xl">S</span>arathi</h1>
+        <div className="flex items-center gap-4">
+          <img
+            src="/logo-01.png"
+            alt="Sarathi Logo"
+            className="w-28 h-30 object-contain"
+          />
         </div>
+
+
 
         {/* Hamburger Icon for Mobile */}
         <div className="lg:hidden flex items-center">
