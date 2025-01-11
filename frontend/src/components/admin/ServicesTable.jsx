@@ -7,26 +7,19 @@ import { Avatar, AvatarImage } from '../ui/avatar';
 import { useSelector } from 'react-redux';
 
 const ServicesTable = () => {
-    const { services = [], searchServicesByText } = useSelector(store => store.service); // Default to empty array if services is undefined
-    const [filterServices, setFilterServices] = useState(services);
+    const { services, searchServicesByText } = useSelector((store) => store.service);
+    const [filterServices, setFilterServices] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Ensure services is an array before accessing .length
-        if (Array.isArray(services)) {
-            const filteredServices = services.filter((service) => {
-                if (!searchServicesByText) {
-                    return true;
-                }
-                return service?.name?.toLowerCase().includes(searchServicesByText.toLowerCase());
-            });
-
-            // Only update filterServices if the filtered result has changed
-            if (JSON.stringify(filteredServices) !== JSON.stringify(filterServices)) {
-                setFilterServices(filteredServices);
-            }
-        }
-    }, [services, searchServicesByText, filterServices]);
+        const filteredServices = Array.isArray(services) 
+            ? services.filter((services) => {
+                if (!searchServicesByText) return true;
+                return services?.name?.toLowerCase().includes(searchServicesByText.toLowerCase());
+            }) 
+            : [];
+        setFilterServices(filteredServices);
+    }, [services, searchServicesByText]);
 
     return (
         <div>
@@ -41,15 +34,15 @@ const ServicesTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filterServices?.map((service) => (
-                        <TableRow key={service._id}>
+                    {Array.isArray(filterServices) && filterServices.map((services) => (
+                        <TableRow key={services._id}>
                             <TableCell>
                                 <Avatar>
-                                    <AvatarImage src={service.logo} />
+                                    <AvatarImage src={services.logo} />
                                 </Avatar>
                             </TableCell>
-                            <TableCell>{service.name}</TableCell>
-                            <TableCell>{service.createdAt.split("T")[0]}</TableCell>
+                            <TableCell>{services.name}</TableCell>
+                            <TableCell>{services.createdAt?.split("T")[0]}</TableCell>
                             <TableCell className="text-right cursor-pointer">
                                 <Popover>
                                     <PopoverTrigger>
@@ -57,7 +50,7 @@ const ServicesTable = () => {
                                     </PopoverTrigger>
                                     <PopoverContent className="w-32">
                                         <div
-                                            onClick={() => navigate(`/admin/services/${service._id}`)}
+                                            onClick={() => navigate(`/admin/services/${services._id}`)}
                                             className="flex items-center gap-2 w-fit cursor-pointer"
                                         >
                                             <Edit2 className="w-4" />
@@ -72,6 +65,6 @@ const ServicesTable = () => {
             </Table>
         </div>
     );
-};
+}
 
 export default ServicesTable;

@@ -50,7 +50,7 @@ const ServicesSetup = () => {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
-                withCredentials: true // Removed the extra apostrophe here
+                withCredentials: true 
             });
             
             if (res.data.success) {
@@ -91,7 +91,7 @@ const ServicesSetup = () => {
                     </div>
                     <div className='grid grid-cols-2 gap-4'>
                         <div>
-                            <Label>Company Name</Label>
+                            <Label>Services Name</Label>
                             <Input
                                 type="text"
                                 name="name"
@@ -109,7 +109,7 @@ const ServicesSetup = () => {
                             />
                         </div>
                         <div>
-                            <Label>Website</Label>
+                            <Label>Website/Social media</Label>
                             <Input
                                 type="text"
                                 name="website"
@@ -136,7 +136,7 @@ const ServicesSetup = () => {
                         </div>
                     </div>
                     {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Update</Button>
+                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4 rounded-xl bg-[#45cfc1]">Update</Button>
                     }
                 </form>
             </div>

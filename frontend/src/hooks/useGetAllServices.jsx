@@ -1,27 +1,27 @@
 
 // import { setAllJobs } from '@/redux/jobSlice'
-import { setSingleServices } from '@/redux/servicesSlice'
+import { setServices } from '@/redux/servicesSlice'
 import { SERVICES_API_END_POINT } from '@/utils/constant'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-const useGetServicesById = (servicesId) => {
+const useGetAllServices = () => {
     const dispatch = useDispatch();
     useEffect(()=>{
-        const fetchSingleServices = async () => {
+        const fetchServices = async () => {
             try {
-                const res = await axios.get(`${SERVICES_API_END_POINT}/get/${servicesId}`,{withCredentials:true});
+                const res = await axios.get(`${SERVICES_API_END_POINT}/get`,{withCredentials:true});
                 console.log(res.data.services);
                 if(res.data.success){
-                    dispatch(setSingleServices(res.data.services));
+                    dispatch(setServices(res.data.services));
                 }
             } catch (error) {
                 console.log(error);
             }
         }
-        fetchSingleServices();
-    },[servicesId, dispatch])
+        fetchServices();
+    },[])
 }
 
-export default useGetServicesById
+export default useGetAllServices

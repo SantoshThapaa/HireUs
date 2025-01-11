@@ -79,7 +79,7 @@ i18next
                         sponsorship: "Yes, Sarathi offers both permanent and temporary hiring options based on your requirements.",
                         areasServed: "Sarathi primarily serves major cities in Nepal, including Kathmandu, Lalitpur, Bhaktapur, and nearby regions.",
                         documents: "You need identification documents (e.g., citizenship card, passport) and relevant medical or service-specific details.",
-                        "emergency": "Yes, Sarathi provides emergency nursing services for urgent needs, subject to availability.",
+                        emergency: "Yes, Sarathi provides emergency nursing services for urgent needs, subject to availability.",
                         cost: "The charges depend on the type of service, duration, and location. You can get a detailed quote during registration.",
                         payment: "Payments can be made online via digital wallets, bank transfers, or in cash, depending on your convenience.",
                         quality: "Sarathi ensures quality through rigorous staff selection, training, and regular performance monitoring.",

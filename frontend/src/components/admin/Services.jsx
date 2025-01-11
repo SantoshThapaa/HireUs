@@ -4,12 +4,12 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import ServicesTable from './ServicesTable'
 import { useNavigate } from 'react-router-dom'
-// import useGetAllCompanies from '@/hooks/useGetAllCompanies'
 import { useDispatch } from 'react-redux'
 import { setSearchServicesByText } from '@/redux/servicesSlice'
+import useGetAllServices from '@/hooks/useGetAllServices'
 
 const Services = () => {
-    // useGetAllCompanies();
+    useGetAllServices();
     const [input, setInput] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
