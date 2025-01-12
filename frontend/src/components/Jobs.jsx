@@ -6,23 +6,13 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const Jobs = () => {
-    const { allJobs, searchedQuery } = useSelector((store) => store.job);
+    const { allJobs } = useSelector((store) => store.job);
     const [filterJobs, setFilterJobs] = useState(allJobs);
 
+    // Update filterJobs whenever allJobs changes
     useEffect(() => {
-        if (searchedQuery) {
-            const filteredJobs = allJobs.filter((job) => {
-                return (
-                    job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-                    job.location.toLowerCase().includes(searchedQuery.toLowerCase())
-                );
-            });
-            setFilterJobs(filteredJobs);
-        } else {
-            setFilterJobs(allJobs);
-        }
-    }, [allJobs, searchedQuery]);
+        setFilterJobs(allJobs);
+    }, [allJobs]);
 
     return (
         <div>
@@ -30,11 +20,11 @@ const Jobs = () => {
             <div className="max-w-7xl mx-auto mt-5">
                 <div className="flex gap-5">
                     <div className="w-30%">
-                        {/* Filter Page  */}
-                        <FilterCard />
+                        {/* Pass setFilterJobs as a prop */}
+                        <FilterCard setFilterJobs={setFilterJobs} />
                     </div>
 
-                    {/* Job Card */}
+                    {/* Job Cards */}
                     {filterJobs.length <= 0 ? (
                         <span>Job not found</span>
                     ) : (

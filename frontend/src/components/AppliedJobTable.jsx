@@ -1,29 +1,36 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
-import { Badge } from './ui/badge'
-import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from 'react'
-import axios from 'axios'
-import { setAllAppliedJobs } from '../redux/jobSlice' // Import the action
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios'; 
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { Badge } from './ui/badge';
+import { setAllAppliedJobs } from '@/redux/jobSlice';
 
 const AppliedJobTable = () => {
-  const dispatch = useDispatch()
-  const { allAppliedJobs = [] } = useSelector(store => store.job)
+  const dispatch = useDispatch();
+  const { allAppliedJobs } = useSelector(store => store.job);
 
-  // Fetch the applied jobs when the component mounts
+  // Ensure that allAppliedJobs is an array, or fallback to an empty array
+  const appliedJobs = Array.isArray(allAppliedJobs) ? allAppliedJobs : [];
+
+  // Fetch applied jobs when the component mounts
   useEffect(() => {
     const fetchAppliedJobs = async () => {
       try {
-        const response = await axios.get('/api/appliedJobs') // Adjust the endpoint as needed
-        dispatch(setAllAppliedJobs(response.data)) // Dispatch the action to set the applied jobs in Redux store
+        const response = await axios.get('http://localhost:8000/api/v1/application/get', {
+          withCredentials: true, // to include cookies for authentication
+        });
+        if (Array.isArray(response.data.application)) {
+          dispatch(setAllAppliedJobs(response.data.application));  // Assuming response.data.application is the applied jobs list
+        } else {
+          console.error('Unexpected API response format:', response.data);
+        }
       } catch (error) {
-        console.error('Error fetching applied jobs:', error)
+        console.error('Error fetching applied jobs:', error);
       }
-    }
-    fetchAppliedJobs()
-  }, [dispatch]) // Ensure the effect runs only once when the component mounts
+    };
 
-  // Ensure allAppliedJobs is always an array
-  const appliedJobs = Array.isArray(allAppliedJobs) ? allAppliedJobs : [];
+    fetchAppliedJobs();
+  }, [dispatch]);
 
   return (
     <div>
@@ -38,27 +45,17 @@ const AppliedJobTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {appliedJobs.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center">
-                You haven’t applied to any jobs yet.
-              </TableCell>
-            </TableRow>
+          {appliedJobs.length <= 0 ? (
+            <span>You haven`t applied for any jobs yet.</span>
           ) : (
             appliedJobs.map((appliedJob) => (
               <TableRow key={appliedJob._id}>
-                <TableCell>{appliedJob?.createdAt?.split("T")[0] || "N/A"}</TableCell>
-                <TableCell>{appliedJob?.job?.title || "N/A"}</TableCell>
-                <TableCell>{appliedJob?.job?.services?.name || "N/A"}</TableCell>
+                <TableCell>{appliedJob?.createdAt?.split("T")[0]}</TableCell>
+                <TableCell>{appliedJob.job?.title}</TableCell>
+                <TableCell>{appliedJob.job?.services?.name}</TableCell>
                 <TableCell className="text-right">
-                  <Badge className={
-                    appliedJob?.status === "rejected"
-                      ? 'bg-red-400'
-                      : appliedJob?.status === 'pending'
-                        ? 'bg-gray-400'
-                        : 'bg-green-400'
-                  }>
-                    {appliedJob?.status?.toUpperCase() || "N/A"}
+                  <Badge className={`${appliedJob?.status === "rejected" ? 'bg-red-400' : appliedJob.status === 'pending' ? 'bg-gray-400' : 'bg-green-400'}`}>
+                    {appliedJob.status.toUpperCase()}
                   </Badge>
                 </TableCell>
               </TableRow>
@@ -67,7 +64,7 @@ const AppliedJobTable = () => {
         </TableBody>
       </Table>
     </div>
-  )
-}
+  );
+};
 
-export default AppliedJobTable
+export default AppliedJobTable;
