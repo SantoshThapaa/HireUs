@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import { useSelector } from 'react-redux'
 import useGetServicesById from '@/hooks/useGetServicesById'
 
+
 const ServicesSetup = () => {
     const params = useParams();
     useGetServicesById(params.id);
@@ -66,15 +67,13 @@ const ServicesSetup = () => {
     }
 
     useEffect(() => {
-        if (singleServices) {
             setInput({
                 name: singleServices.name || "",
                 description: singleServices.description || "",
                 website: singleServices.website || "",
                 location: singleServices.location || "",
                 file: singleServices.file || null
-            });
-        }
+            })
     }, [singleServices]);
     
     return (
@@ -83,11 +82,11 @@ const ServicesSetup = () => {
             <div className='max-w-xl mx-auto my-10'>
                 <form onSubmit={submitHandler}>
                     <div className='flex items-center gap-5 p-8'>
-                        <Button onClick={() => navigate("/admin/services")} variant="outline" className="flex items-center gap-2 text-gray-500 font-semibold">
-                            <ArrowLeft />
+                        <Button onClick={() => navigate("/admin/services")} variant="outline" className="flex items-center gap-2 text-[#45cfc1] font-semibold">
+                            <ArrowLeft className='text-[#45cfc1]' />
                             <span>Back</span>
                         </Button>
-                        <h1 className='font-bold text-xl'>Company Setup</h1>
+                        <h1 className='font-bold text-xl'>Services Setup</h1>
                     </div>
                     <div className='grid grid-cols-2 gap-4'>
                         <div>

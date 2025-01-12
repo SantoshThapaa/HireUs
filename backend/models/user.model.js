@@ -22,16 +22,25 @@ const userSchema = new mongoose.Schema({
         enum:['worker','recruiter'],
         required:true
     },
-    profile:{
-        bio:{type:String},
-        skills:[{type:String}],
-        resume:{type:String}, //URL to resume file
-        resumeOriginalName:{type:String},
-        client:{type:mongoose.Schema.Types.ObjectId, ref:'Client'},
-        profilePhoto:{
-            type:String,
-            default:""
-        }
-    },
-},{timestamps:true});
+    profile: {
+        profilePhoto: {
+            type: String
+        },
+        resume: {
+            type: String
+        },
+        resumeOriginalName: {
+            type: String
+        },
+        bio: {
+            type: String
+        },
+        experience: {
+            type: Number,
+            default: 0  // Ensure this is set to a number
+        },
+        skills: [String]
+    }
+}, { timestamps: true });
+
 export const User = mongoose.model('User',userSchema);

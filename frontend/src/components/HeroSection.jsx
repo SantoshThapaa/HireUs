@@ -1,12 +1,23 @@
 // import React from "react";
 import { useTranslation } from "react-i18next";
-
 import { Search } from "lucide-react";
 import { Button } from "./ui/button";
 import CategoryCarousel from "./CategoryCarousel";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSearchedQuery } from "@/redux/jobSlice";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
+  const [query, setQuery] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const searchJobHandler = () => {
+    dispatch(setSearchedQuery(query));
+    navigate("/browse");
+  }
 
   return (
     <section
@@ -32,9 +43,10 @@ function HeroSection() {
           <input
             type="text"
             placeholder={t("findTheMaidOrNurses")}
+            onChange={(e) => setQuery(e.target.value)}
             className="outline-none border-none w-full text-sm"
           />
-          <Button className="rounded-r-full bg-[#45cfc1]">
+          <Button onClick={searchJobHandler} className="rounded-r-full bg-[#45cfc1]">
             <Search className="h-5 w-5 text-white" />
           </Button>
         </div>

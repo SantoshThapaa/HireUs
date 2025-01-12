@@ -22,7 +22,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         phoneNumber: user?.phoneNumber || "",
         bio: user?.profile?.bio || "",
         skills: user?.profile?.skills?.join(", ") || "",
-        file: user?.profile?.resume || ""
+        experience: user?.profile?.experience || "",
+        file: null // Set initial file as null
     });
 
     const dispatch = useDispatch();
@@ -39,40 +40,47 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+    
         const formData = new FormData();
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("bio", input.bio);
+        formData.append("experience", input.experience);
         formData.append("skills", input.skills);
+    
+        // Only append the file if it exists
         if (input.file) {
             formData.append("file", input.file);
         }
-
+    
         try {
             setLoading(true);
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
                 withCredentials: true
             });
-
+    
             if (res.data.success) {
                 dispatch(setUser(res.data.user));
                 toast.success(res.data.message);
-                setOpen(false); // Close dialog on success
+                setOpen(false);
+            } else {
+                toast.error(res.data.message || "Something went wrong!");
             }
         } catch (error) {
-            console.error(error);
+            console.error('API Error:', error.response || error);
             const message = error.response?.data?.message || "Something went wrong!";
             toast.error(message);
         } finally {
             setLoading(false);
         }
     };
+    
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
+        <Dialog open={open}>
+            <DialogContent className="sm:max-w-[425px]" onInteractOutside={() => setOpen(false)}>
                 <DialogHeader>
                     <DialogTitle>Update Profile</DialogTitle>
                     <DialogDescription>
@@ -129,6 +137,21 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 className="col-span-3"
                             />
                         </div>
+                        {/* Experience */}
+                        <div className='grid grid-cols-4 items-center gap-4'>
+                            <Label htmlFor="experience" className="text-right">Experience (Years)</Label>
+                            <Input
+                                id="experience"
+                                name="experience"
+                                type="number"
+                                min="0"
+                                value={input.experience}
+                                onChange={changeEventHandler}
+                                className="col-span-3"
+                                placeholder="e.g., 2"
+                            />
+                        </div>
+
                         {/* Skills */}
                         <div className='grid grid-cols-4 items-center gap-4'>
                             <Label htmlFor="skills" className="text-right">Skills</Label>

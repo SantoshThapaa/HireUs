@@ -1,5 +1,3 @@
-
-// import { setAllJobs } from '@/redux/jobSlice'
 import { setServices } from '@/redux/servicesSlice'
 import { SERVICES_API_END_POINT } from '@/utils/constant'
 import axios from 'axios'

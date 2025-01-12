@@ -79,7 +79,7 @@ export const updateServices = async (req, res) =>{
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         const logo = cloudResponse.secure_url;
 
-        const updateData = {name, description, website, location, logo};
+        const updateData = { name, description, website, location, logo };
 
         const services = await Services.findByIdAndUpdate(req.params.id, updateData, {new: true});
 

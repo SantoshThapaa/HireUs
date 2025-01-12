@@ -10,14 +10,13 @@ const ServicesTable = () => {
     const { services, searchServicesByText } = useSelector((store) => store.service);
     const [filterServices, setFilterServices] = useState();
     const navigate = useNavigate();
-
     useEffect(() => {
-        const filteredServices = Array.isArray(services) 
-            ? services.filter((services) => {
-                if (!searchServicesByText) return true;
-                return services?.name?.toLowerCase().includes(searchServicesByText.toLowerCase());
-            }) 
-            : [];
+        const filteredServices = services.length >= 0 && services.filter((services) => {
+            if (!searchServicesByText) {
+                return true
+            };
+            return services?.name?.toLowerCase().includes(searchServicesByText.toLowerCase());
+        });
         setFilterServices(filteredServices);
     }, [services, searchServicesByText]);
 
@@ -34,12 +33,13 @@ const ServicesTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {Array.isArray(filterServices) && filterServices.map((services) => (
+                    {filterServices?.map((services) => (
                         <TableRow key={services._id}>
                             <TableCell>
                                 <Avatar>
-                                    <AvatarImage src={services.logo} />
+                                    <AvatarImage src={services.logo} alt="Test Logo" />
                                 </Avatar>
+
                             </TableCell>
                             <TableCell>{services.name}</TableCell>
                             <TableCell>{services.createdAt?.split("T")[0]}</TableCell>
@@ -61,6 +61,7 @@ const ServicesTable = () => {
                             </TableCell>
                         </TableRow>
                     ))}
+
                 </TableBody>
             </Table>
         </div>
