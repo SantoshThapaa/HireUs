@@ -16,11 +16,16 @@ import ServicesSetup from "./components/admin/ServicesSetup";
 import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from "./components/admin/PostJob";
 import Applicants from "./components/admin/Applicants";
+import AdminDashboard from "./components/dashboard/AdminDashboard";
+import AdminLogin from "./components/auth/Adminlogin";
+import AdminSignup from "./components/auth/AdminSignup";
+import Stats from "./components/dashboard/Stats";
+import Admin from "./components/dashboard/Admin";
 // Set up routes
 const appRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Home/>
+    element: <Home />
   },
   {
     path: '/login',
@@ -32,49 +37,70 @@ const appRouter = createBrowserRouter([
   },
   {
     path: '/jobs',
-    element: <Jobs/> 
+    element: <Jobs />
   },
   {
     path: '/browse',
-    element: <Browse/> 
+    element: <Browse />
   },
   {
     path: '/profile',
-    element: <Profile/> 
+    element: <Profile />
   },
   {
     path: '/description/:id',
-    element: <JobDescription/> 
+    element: <JobDescription />
   },
-
+  //dashboard part here
+  {
+    path: '/adminlogin',
+    element: <AdminLogin />
+  },
+  {
+    path: '/adminsignup',
+    element: <AdminSignup />
+  },
+  {
+    path: '/dashboard/adminDashboard',
+    element: <AdminDashboard />
+  },
+  {
+    path: '/dashboard/adminDashboard/stats',
+    element: <Stats/>
+  },
+  
+  {
+    path: '/dashboard/adminDashboard/admin',
+    element: <Admin/>
+  },
   //admin part here
   {
     path: '/admin/services',
-    element: <Services/> 
+    element: <Services />
   },
   {
     path: '/admin/services/create',
-    element: <ServicesCreate/> 
+    element: <ServicesCreate />
   },
   {
     path: '/admin/services/:id',
-    element: <ServicesSetup/> 
+    element: <ServicesSetup />
   },
   {
     path: '/admin/jobs',
-    element: <AdminJobs/> 
+    element: <AdminJobs />
   },
   {
     path: '/admin/jobs/create',
-    element: <PostJob/> 
+    element: <PostJob />
   },
   {
     path: '/admin/jobs/:id/applicants',
-    element: <Applicants/> 
+    element: <Applicants />
   },
   {
     path: '/admin/jobs/:id/recommendations',
-    element: <Applicants /> 
+    element: <Applicants />
   }
 ]);
 

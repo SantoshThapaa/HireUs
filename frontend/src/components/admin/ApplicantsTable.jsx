@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { MoreHorizontal } from 'lucide-react';
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 import { toast } from 'sonner';
 import { APPLICATION_API_END_POINT } from '@/utils/constant';
 import axios from 'axios';
@@ -16,6 +16,7 @@ const ApplicantsTable = ({ applicants }) => {
     const [paymentStatus, setPaymentStatus] = useState({}); // Payment status tracking
     const [selectedStatus, setSelectedStatus] = useState({}); // Track selected status for each applicant
 
+    // Function to handle applicant status update and payment logic
     const statusHandler = async (status, id, salary, fullname) => {
         if (status === 'Accepted' && !paymentStatus[id]) {
             // Open payment modal if "Accepted" is selected and payment hasn't been made yet
@@ -36,16 +37,17 @@ const ApplicantsTable = ({ applicants }) => {
         }
     };
 
+    // Function to handle successful payment and update the applicant status
     const handlePaymentSuccess = async (applicantId) => {
         try {
             // Update the payment status locally
             setPaymentStatus(prevState => ({ ...prevState, [applicantId]: true }));
             setSelectedStatus(prevState => ({ ...prevState, [applicantId]: "Accepted" }));
-            
+
             // Now update the status on the server
             axios.defaults.withCredentials = true;
             const res = await axios.post(`${APPLICATION_API_END_POINT}/status/${applicantId}/update`, { status: 'Accepted' });
-    
+
             if (res.data.success) {
                 toast.success('Payment successful and status updated');
             }
@@ -53,7 +55,23 @@ const ApplicantsTable = ({ applicants }) => {
             toast.error(error.response?.data?.message || 'An error occurred while updating the status');
         }
     };
+
+    const sortedApplicants = [...applicants]?.sort((a, b) => {
+        const experienceA = a?.applicant?.profile?.experience || 0;
+        const experienceB = b?.applicant?.profile?.experience || 0;
+        const ageA = a?.applicant?.profile?.age || 0;
+        const ageB = b?.applicant?.profile?.age || 0;
     
+        // Sort by experience in descending order
+        if (experienceA !== experienceB) {
+            return experienceB - experienceA;  // If experiences are different, sort by experience (descending)
+        }
+    
+        // If experiences are the same, sort by age in ascending order (younger applicants come first)
+        return ageA - ageB;
+    });
+    
+
 
     return (
         <div>
@@ -71,8 +89,8 @@ const ApplicantsTable = ({ applicants }) => {
                 </TableHeader>
                 <TableBody>
                     {
-                        applicants?.length > 0
-                            ? applicants.map((item) => (
+                        sortedApplicants?.length > 0
+                            ? sortedApplicants.map((item) => (
                                 <TableRow key={item._id}>
                                     <TableCell>{item?.applicant?.fullname}</TableCell>
                                     <TableCell>{item?.applicant?.email}</TableCell>
@@ -81,7 +99,7 @@ const ApplicantsTable = ({ applicants }) => {
                                         {item?.applicant?.profile?.resume
                                             ? <a className="text-blue-600 cursor-pointer" href={item?.applicant?.profile?.resume} target="_blank" rel="noopener noreferrer">
                                                 {item?.applicant?.profile?.resumeOriginalName}
-                                              </a>
+                                            </a>
                                             : <span>NA</span>
                                         }
                                     </TableCell>
@@ -93,9 +111,9 @@ const ApplicantsTable = ({ applicants }) => {
                                             </PopoverTrigger>
                                             <PopoverContent className="w-32">
                                                 {shortlistingStatus.map((status, index) => (
-                                                    <div 
+                                                    <div
                                                         key={index}
-                                                        onClick={() => statusHandler(status, item?._id, item?.salary, item?.applicant?.fullname)} 
+                                                        onClick={() => statusHandler(status, item?._id, item?.salary, item?.applicant?.fullname)}
                                                         className={`flex w-fit items-center my-2 cursor-pointer ${selectedStatus[item._id] === status ? 'font-bold text-blue-600' : ''}`}
                                                     >
                                                         <span>{status}</span>
@@ -116,7 +134,7 @@ const ApplicantsTable = ({ applicants }) => {
             </Table>
 
             {selectedApplicant && (
-                <Payment 
+                <Payment
                     isOpen={isPaymentModalOpen}
                     onClose={() => setIsPaymentModalOpen(false)}
                     applicant={selectedApplicant} // Pass the whole selectedApplicant

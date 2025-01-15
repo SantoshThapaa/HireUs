@@ -1,4 +1,3 @@
-// components/Applicants.js
 import { useEffect, useState } from 'react';
 import Navbar from '../shared/Navbar';
 import ApplicantsTable from './ApplicantsTable';
@@ -30,7 +29,7 @@ const Applicants = () => {
 
                     const jobPositions = res.data.job?.position || 0;  // Get number of available positions
 
-                    // Filter applicants based on experience, then sort by descending experience
+                    // Filter applicants based on experience, then sort by experience and age
                     const recommended = res.data.job.applications
                         .filter(application => {
                             const applicantExperience = application?.applicant?.profile?.experience || 0;
@@ -42,9 +41,16 @@ const Applicants = () => {
                         .sort((a, b) => {
                             const experienceA = a?.applicant?.profile?.experience || 0;
                             const experienceB = b?.applicant?.profile?.experience || 0;
-                            return experienceB - experienceA;  // Sorting in descending order
+                            const ageA = a?.applicant?.profile?.age || 0;
+                            const ageB = b?.applicant?.profile?.age || 0;
+
+                            // Sort by experience (desc), if experiences are the same, sort by age (asc)
+                            if (experienceA !== experienceB) {
+                                return experienceB - experienceA;  // Descending order for experience
+                            }
+                            return ageA - ageB;  // Ascending order for age (younger applicants preferred)
                         })
-                        .slice(0, jobPositions);  // Limit to the number of positions available
+                        .slice(0, jobPositions);  // Limit to the number of available positions
 
                     setRecommendedApplicants(recommended);
                 } else {
@@ -60,6 +66,7 @@ const Applicants = () => {
 
         fetchAllApplicants();
     }, [params.id, dispatch]);
+
 
     if (loading) return <div>Loading...</div>;
 

@@ -18,6 +18,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     // State for form inputs
     const [input, setInput] = useState({
         fullname: user?.fullname || "",
+        age: user?.profile?.age || "", 
         email: user?.email || "",
         phoneNumber: user?.phoneNumber || "",
         bio: user?.profile?.bio || "",
@@ -43,6 +44,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     
         const formData = new FormData();
         formData.append("fullname", input.fullname);
+        formData.append("age", input.age);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("bio", input.bio);
@@ -99,6 +101,19 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 value={input.fullname}
                                 onChange={changeEventHandler}
                                 className="col-span-3"
+                            />
+                        </div>
+                        {/* Age */}
+                        <div className='grid grid-cols-4 items-center gap-4'>
+                            <Label htmlFor="age" className="text-right">Age</Label>
+                            <Input
+                                id="age"
+                                name="age"
+                                type="number"
+                                value={input.age}
+                                onChange={changeEventHandler}
+                                className="col-span-3"
+                                placeholder="e.g., 25"
                             />
                         </div>
                         {/* Email */}

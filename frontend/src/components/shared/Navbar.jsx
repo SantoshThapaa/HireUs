@@ -98,6 +98,11 @@ const Navbar = () => {
                       {t('browse')}
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/adminsignup" className="hover:text-[#45cfc1]">
+                      {t('dashboard')}
+                    </Link>
+                  </li>
                 </>
               )
             }

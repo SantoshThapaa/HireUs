@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Contact, Mail, Pen, Briefcase } from "lucide-react";
+import { Contact, Mail, Pen, Briefcase, User } from "lucide-react";
 import Navbar from "./shared/Navbar";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -35,8 +35,13 @@ const Profile = () => {
             <Pen />
           </Button>
         </div>
-
+        
         <div className="my-5">
+          {/* Age Section */}
+         <div className="flex items-center gap-3 my-2">
+            <User />
+            <span>{user?.profile?.age || "Age not specified"}yrs</span>
+          </div>
           <div className="flex items-center gap-3 my-2">
             <Mail />
             <span>{user?.email}</span>
