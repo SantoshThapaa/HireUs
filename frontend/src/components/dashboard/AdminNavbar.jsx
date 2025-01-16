@@ -1,4 +1,3 @@
-// import React from 'react';
 import { useLocation, Link } from "react-router-dom";
 
 const AdminNavbar = () => {
@@ -9,7 +8,7 @@ const AdminNavbar = () => {
         { name: 'Profile', path: '/dashboard/adminDashboard' },
         { name: 'Stats', path: '/dashboard/adminDashboard/stats' },
         { name: 'Admin', path: '/dashboard/adminDashboard/admin' },
-        { name: 'Manage Users', path: '/dashboard/adminDashboard/manage-users' }
+        { name: 'Manage Users', path: '/dashboard/adminDashboard/manageUsers' }
     ];
 
     return (
@@ -23,8 +22,8 @@ const AdminNavbar = () => {
                                 to={item.path}
                                 className={`block px-4 py-2 rounded-lg ${
                                     location.pathname === item.path
-                                        ? 'bg-purple-700 text-white'
-                                        : 'text-gray-700 hover:bg-purple-100 hover:text-purple-700'
+                                        ? 'bg-[#45cfc1] text-white'  // Active link color
+                                        : 'text-gray-700 hover:bg-[#45cfc1] hover:text-white' // Inactive link color
                                 }`}
                             >
                                 {item.name}

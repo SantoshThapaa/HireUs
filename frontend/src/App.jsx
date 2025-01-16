@@ -21,6 +21,7 @@ import AdminLogin from "./components/auth/Adminlogin";
 import AdminSignup from "./components/auth/AdminSignup";
 import Stats from "./components/dashboard/Stats";
 import Admin from "./components/dashboard/Admin";
+import ManageUsers from "./components/dashboard/ManageUsers";
 // Set up routes
 const appRouter = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const appRouter = createBrowserRouter([
   {
     path: '/dashboard/adminDashboard/admin',
     element: <Admin/>
+  },
+  {
+    path: '/dashboard/adminDashboard/manageUsers',
+    element: <ManageUsers/>
   },
   //admin part here
   {

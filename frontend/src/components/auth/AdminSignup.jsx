@@ -4,7 +4,7 @@ import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { USER_API_END_POINT } from "@/utils/constant";
+import { ADMIN_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
@@ -27,7 +27,7 @@ const AdminSignup = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post(`${USER_API_END_POINT}/adminregister`, input, {
+            const res = await axios.post(`${ADMIN_API_END_POINT}/adminregister`, input, {
                 headers: {
                     "Content-Type": "application/json"
                 },

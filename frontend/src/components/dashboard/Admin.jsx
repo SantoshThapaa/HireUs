@@ -1,53 +1,67 @@
-// import React from 'react';
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 import AdminNavbar from "./AdminNavbar";
+import { ADMIN_API_END_POINT } from "@/utils/constant";  // Update this import if necessary
 
-const Admin = () => {
-    // Dummy data for the cards
-    const userInfo = [
-        { label: 'Total Members', count: 20, color: 'bg-blue-500' },
-        { label: 'Admins', count: 1, color: 'bg-cyan-500' },
-        { label: 'Recruiters', count: 2, color: 'bg-teal-500' },
-        { label: 'Applicants', count: 17, color: 'bg-blue-400' },
-    ];
+const AdminDashboard = () => {
+    const [adminData, setAdminData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const jobInfo = [
-        { label: 'Total Jobs', count: 6, color: 'bg-orange-500' },
-        { label: 'Pending', count: 4, color: 'bg-green-500' },
-        { label: 'Interview', count: 2, color: 'bg-purple-500' },
-        { label: 'Declined', count: 0, color: 'bg-red-500' },
-    ];
+    // Fetch admin dashboard data
+    useEffect(() => {
+        const fetchAdminData = async () => {
+            try {
+                const response = await axios.get(`${ADMIN_API_END_POINT}/dashboard`, {
+                    withCredentials: true, // include credentials in the request
+                });
+
+                if (response.data.success) {
+                    setAdminData(response.data.data);
+                } else {
+                    console.error("Failed to fetch admin data");
+                }
+            } catch (error) {
+                console.error("Error fetching admin data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAdminData();
+    }, []);
+
+    // Handling loading state and rendering data
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!adminData) {
+        return <div>No admin data available</div>;
+    }
 
     return (
-        <div className="p-6">
-            <AdminNavbar/>
-            <h2 className="text-2xl font-bold mb-4">User Info</h2>
-            <div className="grid grid-cols-2 gap-4 mb-8">
-                {userInfo.map((info, index) => (
-                    <div
-                        key={index}
-                        className={`${info.color} text-white p-4 rounded-lg shadow-md flex flex-col items-center`}
-                    >
-                        <p className="text-4xl font-bold">{info.count}</p>
-                        <p className="text-lg">{info.label}</p>
-                    </div>
-                ))}
-            </div>
+        <div className="flex">
+            <AdminNavbar />
+            <div className="min-h-screen bg-white flex">
+                <main className="flex-grow bg-gray-50 p-8">
+                    <h1 className="text-2xl font-semibold text-gray-800 mb-6">Admin Dashboard</h1>
 
-            <h2 className="text-2xl font-bold mb-4">Job Info</h2>
-            <div className="grid grid-cols-2 gap-4">
-                {jobInfo.map((info, index) => (
-                    <div
-                        key={index}
-                        className={`${info.color} text-white p-4 rounded-lg shadow-md flex flex-col items-center`}
-                    >
-                        <p className="text-4xl font-bold">{info.count}</p>
-                        <p className="text-lg">{info.label}</p>
+                    {/* Summary section */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                        {adminData.summary && Object.entries(adminData.summary).map(([key, value]) => (
+                            <div
+                                key={key}
+                                className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center"
+                            >
+                                <p className="text-2xl font-bold text-gray-800">{value}</p>
+                                <p className="text-sm text-gray-500">{key}</p>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                </main>
             </div>
         </div>
     );
 };
 
-export default Admin;
+export default AdminDashboard;

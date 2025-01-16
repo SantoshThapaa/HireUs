@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { useDispatch } from 'react-redux';
-import { USER_API_END_POINT } from '@/utils/constant';
+import { ADMIN_API_END_POINT } from '@/utils/constant';
 import { setUser } from '@/redux/authSlice';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -15,7 +15,7 @@ const AdminNav = () => {
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${USER_API_END_POINT}/adminlogout`, { withCredentials: true });
+      const res = await axios.get(`${ADMIN_API_END_POINT}/adminlogout`, { withCredentials: true });
       if (res.data.success) {
         dispatch(setUser(null)); // Clear user state
         navigate('/');

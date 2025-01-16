@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import axios from "axios";
-import { USER_API_END_POINT } from "@/utils/constant";
+import { ADMIN_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { setLoading} from "@/redux/authSlice";
@@ -30,7 +30,7 @@ const AdminLogin = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post(`${USER_API_END_POINT}/adminlogin`, input, {
+            const res = await axios.post(`${ADMIN_API_END_POINT}/adminlogin`, input, {
                 headers: {
                     "Content-Type": "application/json"
                 },

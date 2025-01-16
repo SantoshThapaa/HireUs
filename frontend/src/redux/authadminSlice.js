@@ -1,14 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-const authSlice = createSlice({
-  name: "auth",
-  initialState: { admin: null },
-  reducers: {
-    setAdmin(state, action) {
-      state.admin = action.payload;
+const initialState = {
+    admin: null,  // Default value is null, representing that admin data is not yet loaded
+};
+
+const authadminSlice = createSlice({
+    name: 'authadmin',
+    initialState,
+    reducers: {
+        setAdmin: (state, action) => {
+            state.admin = action.payload;  // Set the admin data when dispatched
+        },
     },
-  },
 });
 
-export const { setAdmin } = authSlice.actions;
-export default authSlice.reducer;
+export const { setAdmin } = authadminSlice.actions;
+export default authadminSlice.reducer;
