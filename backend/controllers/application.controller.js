@@ -154,7 +154,6 @@ export const updateStatus = async (req,res) => {
         console.log(error);
     }
 }
-// controllers/jobController.js
 export const recommendEmployees = async (req, res) => {
     try {
         const jobId = req.params.id;
@@ -169,7 +168,7 @@ export const recommendEmployees = async (req, res) => {
         }
 
         // Get all applications for the job and check the experience of the applicants
-        const applications = await Application.find({ job: jobId }).populate('applicant', 'fullname email phoneNumber profile.experience');  // Optimized query
+        const applications = await Application.find({ job: jobId }).populate('applicant', 'fullname email phoneNumber profile.experience profile.age');  // Optimized query
 
         if (applications.length === 0) {
             return res.status(404).json({
@@ -178,13 +177,13 @@ export const recommendEmployees = async (req, res) => {
             });
         }
 
-        // Filter applicants based on experience
-        const recommendedApplicants = applications.filter(application => {
+        // First, filter applicants based on experience (greater than or equal to required experience)
+        const filteredApplicants = applications.filter(application => {
             const applicant = application.applicant;
-            return applicant.profile.experience >= job.experienceLevel; // recommend if the applicant's experience is >= job's experience level
+            return applicant.profile.experience >= job.experienceLevel;
         });
 
-        if (recommendedApplicants.length === 0) {
+        if (filteredApplicants.length === 0) {
             return res.status(200).json({
                 message: 'No recommended applicants found based on the required experience.',
                 success: true,
@@ -192,8 +191,31 @@ export const recommendEmployees = async (req, res) => {
             });
         }
 
+        // Sort applicants by experience (descending), and for equal experience, by age (ascending)
+        const sortedApplicants = filteredApplicants.sort((a, b) => {
+            const experienceA = a.applicant.profile.experience;
+            const experienceB = b.applicant.profile.experience;
+
+            // If experience is the same, prioritize the younger applicant
+            if (experienceA === experienceB) {
+                return a.applicant.profile.age - b.applicant.profile.age;
+            }
+
+            // Otherwise, prioritize based on experience
+            return experienceB - experienceA;
+        });
+
+        // Prepare the response with the recommended applicants
+        const recommendedApplicants = sortedApplicants.map(application => ({
+            fullname: application.applicant.fullname,
+            email: application.applicant.email,
+            phoneNumber: application.applicant.phoneNumber,
+            experience: application.applicant.profile.experience,
+            age: application.applicant.profile.age
+        }));
+
         return res.status(200).json({
-            message: 'Recommended applicants based on experience.',
+            message: 'Recommended applicants based on experience and age.',
             success: true,
             recommendedApplicants
         });
@@ -206,4 +228,22 @@ export const recommendEmployees = async (req, res) => {
         });
     }
 };
+
+export const getAllApplication = async (req, res) => {
+    try {
+        const services = await Application.find();
+        res.status(200).json({
+            success: true,
+            services,
+        });
+    } catch (error) {
+        console.error("Error fetching services:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch services",
+            error: error.message,
+        });
+    }
+};
+
 
