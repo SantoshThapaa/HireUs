@@ -92,11 +92,6 @@ export const adminlogout = async (req, res) => {
     }
   }
   
-// // Admin logout
-// export const adminlogout = (req, res) => {
-//   res.cookie("token", "", { maxAge: 0 }).json({ message: "Logged out successfully.", success: true });
-// };
-
 // Fetch admin data
 export const getAdminData = async (req, res) => {
   try {
