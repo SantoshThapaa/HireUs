@@ -62,13 +62,13 @@ const AdminDashboard = () => {
                                 <div>
                                     <p className="text-sm text-gray-500">Username:</p>
                                     <p className="text-lg font-medium text-gray-800">
-                                        {admin?.fullname}
+                                        {admin.fullname}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500">Email:</p>
                                     <p className="text-lg font-medium text-gray-800">
-                                        {admin?.email}
+                                        {admin.email}
                                     </p>
                                 </div>
                                 <div>

@@ -8,7 +8,8 @@ const AdminNavbar = () => {
         { name: 'Profile', path: '/dashboard/adminDashboard' },
         { name: 'Stats', path: '/dashboard/adminDashboard/stats' },
         { name: 'Admin', path: '/dashboard/adminDashboard/admin' },
-        { name: 'Manage Users', path: '/dashboard/adminDashboard/manageUsers' }
+        { name: 'Manage Users', path: '/dashboard/adminDashboard/manageUsers' },
+        { name: 'Manage Services', path: '/dashboard/adminDashboard/manageServices' }
     ];
 
     return (
