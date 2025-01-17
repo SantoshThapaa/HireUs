@@ -1,78 +1,107 @@
-import { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
-import AdminNavbar from './AdminNavbar';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer as LineResponsiveContainer } from "recharts";
+import AdminNavbar from "./AdminNavbar";
+import { ADMIN_API_END_POINT } from "@/utils/constant";
 
 const Stats = () => {
-    const [stats, setStats] = useState({ pieData: [], lineData: [] });
+    const [statsData, setStatsData] = useState({
+        applicants: { pending: 0, selected: 0, rejected: 0 },
+        users: [],
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchStatsData = async () => {
             try {
-                const { data } = await axios.get('/api/stats');
-                setStats({
-                    pieData: data.pieData || [],
-                    lineData: data.lineData || [],
-                });
-                setLoading(false);
+                const response = await axios.get(`${ADMIN_API_END_POINT}/admindashboard`, { withCredentials: true });
+                if (response.data.success) {
+                    setStatsData(response.data.data); // Assuming response has `data` containing stats
+                } else {
+                    setError("Failed to fetch stats data.");
+                }
             } catch (err) {
-                console.error(err); // Log the error for debugging
-                setError(`Error fetching data: ${err.message}`);
+                setError("Error fetching stats: " + err.message);
+            } finally {
                 setLoading(false);
             }
-            
         };
-        fetchStats();
+
+        fetchStatsData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-    const { pieData, lineData } = stats;
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    const { applicants, users } = statsData;
+
+    // Prepare line chart data
+    const lineChartData = (users || []).map((user) => ({
+        name: user.date, // Ensure users have 'date' field
+        count: user.count, // Ensure users have 'count' field
+    }));
+
+    // Prepare pie chart data
+    const pieData = [
+        { name: "Pending", value: applicants.pending },
+        { name: "Selected", value: applicants.selected },
+        { name: "Rejected", value: applicants.rejected },
+    ];
 
     return (
-        <div className="p-6 flex flex-col">
+        <div className="flex">
             <AdminNavbar />
-            <h2 className="text-2xl font-bold mb-6">Overall Statistics</h2>
-            <div className="flex space-x-6">
-                {/* Pie Chart Section */}
-                <div>
-                    <PieChart width={300} height={300}>
-                        <Pie
-                            data={pieData}
-                            dataKey="value"
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={100}
-                            label
-                        >
-                            {pieData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
+            <div className="min-h-screen bg-white flex flex-col p-8 gap-8">
+                <h1 className="text-2xl font-semibold text-gray-800 mb-6">Admin Stats</h1>
+
+                {/* Applicants Pie Chart */}
+                <div className="mb-8">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Applicants Status</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                            <Pie
+                                data={pieData}
+                                dataKey="value"
+                                nameKey="name"
+                                outerRadius={120}
+                                fill="#8884d8"
+                                animationDuration={1500} // Add animation
+                                animationEasing="ease-in-out"
+                            >
+                                <Cell name="Pending" fill="#ff7300" />
+                                <Cell name="Selected" fill="#00c49f" />
+                                <Cell name="Rejected" fill="#ff0000" />
+                            </Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
                 </div>
 
-                {/* Line Chart Section */}
+                {/* Users Registration Line Chart */}
                 <div>
-                    <h3 className="text-xl font-semibold mb-4">Job Application Stats</h3>
-                    <LineChart
-                        width={600}
-                        height={300}
-                        data={lineData}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="applications" stroke="#8884d8" strokeWidth={2} />
-                    </LineChart>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">User Registration Over Time</h3>
+                    <LineResponsiveContainer width="100%" height={300}>
+                        <LineChart data={lineChartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                                type="monotone"
+                                dataKey="count"
+                                stroke="#8884d8"
+                                animationDuration={1500} // Add animation
+                                animationEasing="ease-in-out"
+                            />
+                        </LineChart>
+                    </LineResponsiveContainer>
                 </div>
             </div>
         </div>
