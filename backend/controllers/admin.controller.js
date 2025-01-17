@@ -116,53 +116,114 @@ export const getAdminData = async (req, res) => {
 };
 
 export const getAdminDashboardData = async (req, res) => {
-    try {
-      // Fetch workers and recruiters count
-      const workersCount = await User.countDocuments({ role: 'worker' });
-      const recruitersCount = await User.countDocuments({ role: 'recruiter' });
-  
-      // Get all users
-      const allUsers = await User.find({}, 'name email role createdAt');
-  
-      // Get all services
-      const allServices = await Services.find({}, 'title description createdAt');
-  
-      // Get all applications and their associated jobs and applicants
-      const allApplications = await Application.find().populate({
-        path: 'job',
-        select: 'title companyName',
-      }).populate({
-        path: 'applicant',
-        select: 'name email',
-      });
-  
-      const totalApplications = allApplications.length;
-  
-      const response = {
+  try {
+    // Fetch workers and recruiters count
+    const workersCount = await User.countDocuments({ role: 'worker' });
+    const recruitersCount = await User.countDocuments({ role: 'recruiter' });
+
+    // Fetch all users (include phoneNumber and other fields)
+    const allUsers = await User.find({}, 'fullname email phoneNumber role createdAt');
+
+    // Fetch all services
+    const allServices = await Services.find({}, 'name description website location createdAt');
+
+    const response = {
+      summary: {
+        workersCount,
+        recruitersCount,
+        totalServices: allServices.length,
+      },
+      data: {
+        users: allUsers,
+        services: allServices,
+      },
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: 'Admin dashboard data retrieved successfully',
+      data: response,
+    });
+  } catch (error) {
+    console.error('Error fetching admin dashboard data:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch admin dashboard data',
+      error: error.message,
+    });
+  }
+};
+const getAdminDashboardStats = async (req, res) => {
+  try {
+    // Get the count of applicants with their statuses (selected, pending, rejected)
+    const applicantStats = await Application.aggregate([
+      {
+        $group: {
+          _id: null,
+          selected: { $sum: { $cond: [{ $eq: ["$status", "accepted"] }, 1, 0] } },
+          pending: { $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] } },
+          rejected: { $sum: { $cond: [{ $eq: ["$status", "rejected"] }, 1, 0] } },
+        },
+      },
+    ]);
+
+    // Get the count of users registered per month
+    const userStats = await User.aggregate([
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: { month: "$month", year: "$year" },
+          registrations: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 },
+      },
+    ]);
+
+    // Format user registration data for the frontend (month/year combined as a string)
+    const formattedUserStats = userStats.map((entry) => ({
+      month: `${entry._id.month}/${entry._id.year}`,
+      registrations: entry.registrations,
+    }));
+
+    // Get summary of the total counts (workers, recruiters, services)
+    const workersCount = await User.countDocuments({ role: "worker" });
+    const recruitersCount = await User.countDocuments({ role: "recruiter" });
+    const totalServices = await Services.countDocuments();
+
+    // Check applicant stats and format them to match expected structure
+    const applicants = applicantStats.length > 0 ? applicantStats[0] : { selected: 0, pending: 0, rejected: 0 };
+
+    // Send response
+    res.status(200).json({
+      success: true,
+      message: "Admin dashboard data retrieved successfully",
+      data: {
+        applicants,
+        userRegistrations: formattedUserStats,
         summary: {
           workersCount,
           recruitersCount,
-          totalServices: allServices.length,
-          totalApplications,
+          totalServices,
         },
-        data: {
-          users: allUsers,
-          services: allServices,
-          applications: allApplications,
-        },
-      };
-  
-      res.status(200).json({
-        success: true,
-        message: 'Admin dashboard data retrieved successfully',
-        data: response,
-      });
-    } catch (error) {
-      console.error('Error fetching admin dashboard data:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Failed to fetch admin dashboard data',
-        error: error.message,
-      });
-    }
-  };
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching admin dashboard stats:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve admin dashboard data",
+      error: err.message,
+    });
+  }
+};
+
+export { getAdminDashboardStats };
+
+
