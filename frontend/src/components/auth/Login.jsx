@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import { useGoogleLogin } from '@react-oauth/google';
+import { googleAuth } from '@/api';
 
 const Login = () => {
     const { t } = useTranslation();
@@ -51,11 +53,29 @@ const Login = () => {
             dispatch(setLoading(false));
         }
     }
-    useEffect(()=>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             navigate("/");
         }
-    },[])
+    }, [])
+    const responseGoogle = async (authResult) => {
+        try {
+            if(authResult['code']){
+                const result = await googleAuth(authResult['code']);
+                const { email, name, picture } = result.data.user;
+                const token = result.data.token;
+                console.log('result.data.user---',result.data.user);
+                console.log(token);
+            }
+        } catch (err) {
+            console.error('Error while requesting the google code :', err)
+        }
+    }
+    const googleLogin = useGoogleLogin({
+        onSuccess: responseGoogle,
+        onError: responseGoogle,
+        flow: 'auth-code'
+    })
 
     return (
         <div>
@@ -85,20 +105,30 @@ const Login = () => {
                             </div>
                         </RadioGroup>
                     </div>
+
                     {
-                        loading ? 
+                        loading ?
                             <Button className="w-full my-4">
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('pleaseWait')}
                             </Button>
-                        : (
-                            <Button type="submit" className="w-full my-4 bg-[#45cfc1] hover:bg-[#32b4a7]">
-                                {t('login')}
-                            </Button>
-                        )
+                            : (
+                                <Button type="submit" className="w-full my-4 bg-[#45cfc1] hover:bg-[#32b4a7]">
+                                    {t('login')}
+                                </Button>
+                            )
                     }
-                    <span className="text-sm">
+                    <div className='flex flex-col items-center justify-center mt-5 sm:ml-0 lg:ml-18'>
+                        <button
+                            onClick={googleLogin}
+                            className="flex items-center justify-center border-black border border-solid bg-white text-black font-semibold py-2 px-6 sm:px-8 lg:px-10 rounded-2xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                        >
+                            Login with Google
+                        </button>
+                        <br />
+                        <span className="text-sm">
                         {t('signupPrompt')} <Link to="/signup" className="text-blue-600">{t('signup')}</Link>
                     </span>
+                    </div>
                 </form>
             </div>
         </div>

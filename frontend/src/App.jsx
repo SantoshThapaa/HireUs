@@ -1,10 +1,8 @@
-// Import necessary modules
 import Home from "./components/Home";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
-// import NotFound from "./components/NotFound"; // Import the NotFound component
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { I18nextProvider } from 'react-i18next'; // Import I18nextProvider
+import { I18nextProvider } from 'react-i18next';
 import i18next from './i18n'; // Import your i18n configuration
 import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
@@ -23,6 +21,8 @@ import Stats from "./components/dashboard/Stats";
 import Admin from "./components/dashboard/Admin";
 import ManageUsers from "./components/dashboard/ManageUsers";
 import ManageServices from "./components/dashboard/ManageServices";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 // Set up routes
 const appRouter = createBrowserRouter([
   {
@@ -68,22 +68,21 @@ const appRouter = createBrowserRouter([
   },
   {
     path: '/dashboard/adminDashboard/stats',
-    element: <Stats/>
+    element: <Stats />
   },
-  
   {
     path: '/dashboard/adminDashboard/admin',
-    element: <Admin/>
+    element: <Admin />
   },
   {
     path: '/dashboard/adminDashboard/manageUsers',
-    element: <ManageUsers/>
+    element: <ManageUsers />
   },
   {
     path: '/dashboard/adminDashboard/manageServices',
-    element: <ManageServices/>
+    element: <ManageServices />
   },
-  //admin part here
+  // admin part here
   {
     path: '/admin/services',
     element: <Services />
@@ -118,9 +117,9 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <I18nextProvider i18n={i18next}> {/* Wrap with I18nextProvider */}
-      <div>
+      <GoogleOAuthProvider clientId="741213674118-ti3t2m7v9nf3etrc38h66nt9ojmh8qp1.apps.googleusercontent.com">
         <RouterProvider router={appRouter} />
-      </div>
+      </GoogleOAuthProvider>
     </I18nextProvider>
   );
 }

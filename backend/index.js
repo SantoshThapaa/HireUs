@@ -8,6 +8,7 @@ import servicesRoute from "./routes/services.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 import adminRoute from "./routes/admin.route.js";
+import authRouter from "./routes/authRouter.js";
 
 dotenv.config({});
 
@@ -32,6 +33,7 @@ app.use("/api/v1/services", servicesRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute); 
 app.use("/api/v1/admin", adminRoute); 
+app.use("/auth",authRouter);
   
 
 app.listen(PORT, () => {
