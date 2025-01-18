@@ -21,7 +21,7 @@ import Stats from "./components/dashboard/Stats";
 import Admin from "./components/dashboard/Admin";
 import ManageUsers from "./components/dashboard/ManageUsers";
 import ManageServices from "./components/dashboard/ManageServices";
-// import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Set up routes
 const appRouter = createBrowserRouter([
@@ -117,9 +117,9 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <I18nextProvider i18n={i18next}> {/* Wrap with I18nextProvider */}
-      
+      <GoogleOAuthProvider clientId="741213674118-ti3t2m7v9nf3etrc38h66nt9ojmh8qp1.apps.googleusercontent.com">
         <RouterProvider router={appRouter} />
-      {/* </GoogleOAuthProvider> */}
+      </GoogleOAuthProvider>
     </I18nextProvider>
   );
 }
