@@ -53,7 +53,7 @@ const AdminLogin = () => {
       
     useEffect(()=>{
         if(user){
-            navigate("/");
+            navigate("/dashboard/adminDashboard");
         }
     },[])
 
