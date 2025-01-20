@@ -84,7 +84,7 @@ const Navbar = () => {
               ) : (
                 <>
                   <li>
-                    <Link to="/" className="hover:text-[#45cfc1]">
+                    <Link to="/home" className="hover:text-[#45cfc1]">
                       {t('home')}
                     </Link>
                   </li>
@@ -112,20 +112,20 @@ const Navbar = () => {
           {
             !user ? (
               <div className="flex items-center gap-2">
-                <Link to="/login"><Button variant="outline">{t('login')}</Button></Link>
+                <Link to="/"><Button variant="outline">{t('login')}</Button></Link>
                 <Link to="/signup"><Button className="bg-[#45cfc1] hover:bg-[#32b4a7]">{t('signup')}</Button></Link>
               </div>
             ) : (
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar className="cursor-pointer">
-                    <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                    <AvatarImage src={user?.profile?.profilePhoto || user?.picture} alt="@shadcn" />
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="w-80  bg-white">
                   <div className="flex gap-4 space-y-2">
                     <Avatar>
-                      <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                      <AvatarImage src={user?.profile?.profilePhoto || user?.picture} alt="@shadcn" />
                     </Avatar>
                     <div>
                       <h4 className="font-medium">{user?.fullname}</h4>
