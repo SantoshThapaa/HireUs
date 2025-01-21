@@ -96,31 +96,39 @@ export const getAppliedJobs = async (req, res) => {
     }
 }
 //Admin will see how much has applied for job
-export const getApplicants = async(req, res) => {
-    try{
-        const jobId= req.params.id;
+// admin will see how much has applied for the job
+export const getApplicants = async (req, res) => {
+    try {
+        const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
             path: 'applications',
-            options:{sort:{createdAt:-1}},
-            populate:{
-                path:'applicant',
+            options: { sort: { createdAt: -1 } },
+            populate: {
+                path: 'applicant',
             }
         });
-        if(!job){
+
+        if (!job) {
             return res.status(404).json({
-                message:'Job not found',
-                success:false
-            })
-        };
+                message: 'Job not found',
+                success: false
+            });
+        }
+
+        // Fetch the salary from the job and include it in the response
+        const jobSalary = job.salary;
 
         return res.status(200).json({
             job,
-            success:true
+            jobSalary, // Send the salary information
+            success: true
         });
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
-}
+};
+
+
 export const updateStatus = async (req,res) => {
     try {
         const {status} = req.body;
