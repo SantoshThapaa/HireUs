@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useContext } from 'react';
 import { Contact, Mail, Pen, Briefcase, User } from "lucide-react";
 import Navbar from "./shared/Navbar";
 import { Avatar, AvatarImage } from "./ui/avatar";
@@ -8,13 +9,28 @@ import { Label } from "./ui/label";
 import AppliedJobTable from "./AppliedJobTable";
 import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { UserContext } from '@/context/UserContext';
+
 
 const isResume = true;
 
 const Profile = () => {
+  const { userId } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const { user } = useSelector(store => store.auth);
 
+  const generateCVHandler = async () => {
+    try {
+      const response = await axios.get(`/api/user/generate-cv/${userId}`);
+      if (response.data.success) {
+        alert("CV generated successfully! You can download it.");
+      }
+    } catch (error) {
+      console.error("Error generating CV", error);
+      alert("Something went wrong.");
+    }
+  };
   if (!user) return <div>Loading...</div>;
 
   return (
@@ -24,7 +40,7 @@ const Profile = () => {
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage src={user?.profile?.profilePhoto} alt="profile" />
+              <AvatarImage src={user?.profile?.profilePhoto || user?.picture} alt="profile" />
             </Avatar>
             <div>
               <h1 className="font-medium text-xl">{user?.fullname}</h1>
@@ -40,7 +56,7 @@ const Profile = () => {
           {/* Age Section */}
          <div className="flex items-center gap-3 my-2">
             <User />
-            <span>{user?.profile?.age || "Age not specified"}yrs</span>
+            <span>{user?.profile?.age || "Age not specified"} yrs</span>
           </div>
           <div className="flex items-center gap-3 my-2">
             <Mail />
@@ -64,6 +80,7 @@ const Profile = () => {
               : <span>NA</span>}
           </div>
         </div>
+        <Button onClick={generateCVHandler}>Generate CV</Button>
 
         <div className='grid w-full max-w-sm items-center gap-1.5'>
           <Label className="text-md font-bold">Resume</Label>
