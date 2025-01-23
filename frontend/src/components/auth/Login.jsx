@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../shared/Navbar";
+// import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from 'react-i18next';
-import { useGoogleLogin } from '@react-oauth/google';
-import { googleAuth } from '@/api';
+// import { useGoogleLogin } from '@react-oauth/google';
+// import { googleAuth } from '@/api';
 
 const Login = () => {
     const { t } = useTranslation();
@@ -43,7 +43,7 @@ const Login = () => {
             });
             if (res.data.success) {
                 dispatch(setUser(res.data.user));
-                navigate("/");
+                navigate("/home");
                 toast.success(res.data.message);
             }
         } catch (error) {
@@ -58,28 +58,37 @@ const Login = () => {
             navigate("/");
         }
     }, [])
-    const responseGoogle = async (authResult) => {
-        try {
-            if(authResult['code']){
-                const result = await googleAuth(authResult['code']);
-                const { email, name, picture } = result.data.user;
-                const token = result.data.token;
-                console.log('result.data.user---',result.data.user);
-                console.log(token);
-            }
-        } catch (err) {
-            console.error('Error while requesting the google code :', err)
-        }
-    }
-    const googleLogin = useGoogleLogin({
-        onSuccess: responseGoogle,
-        onError: responseGoogle,
-        flow: 'auth-code'
-    })
+    // const responseGoogle = async (authResult) => {
+    //     try {
+    //         if(authResult['code']){
+    //             const result = await googleAuth(authResult['code']);
+    //             const { email, name, picture } = result.data.user;
+    //             const token = result.data.token;
+    //             const obj = { email, name, picture, token };
+    
+    //             // Update user data in Redux store
+    //             dispatch(setUser({ ...user, email, name, picture }));
+    
+    //             // Optionally, store data in localStorage if needed
+    //             localStorage.setItem('user-info', JSON.stringify(obj));
+    
+    //             navigate('/');
+    //         }
+    //     } catch (err) {
+    //         console.error('Error while requesting the google code :', err);
+    //     }
+    // }
+    
+    
+    // const googleLogin = useGoogleLogin({
+    //     onSuccess: responseGoogle,
+    //     onError: responseGoogle,
+    //     flow: 'auth-code'
+    // })
 
     return (
         <div>
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="flex items-center justify-center max-w-7xl mx-auto">
                 <form onSubmit={submitHandler} className="w-1/2 border border-gray-200 rounded-md p-4 my-10">
                     <h1 className="font-bold text-xl mb-5">{t('loginTitle')}</h1>
@@ -105,7 +114,7 @@ const Login = () => {
                             </div>
                         </RadioGroup>
                     </div>
-
+                    <Link to="/forgot-password">Forgot Password</Link>
                     {
                         loading ?
                             <Button className="w-full my-4">
@@ -118,12 +127,12 @@ const Login = () => {
                             )
                     }
                     <div className='flex flex-col items-center justify-center mt-5 sm:ml-0 lg:ml-18'>
-                        <button
+                        {/* <button
                             onClick={googleLogin}
                             className="flex items-center justify-center border-black border border-solid bg-white text-black font-semibold py-2 px-6 sm:px-8 lg:px-10 rounded-2xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                         >
                             Login with Google
-                        </button>
+                        </button> */}
                         <br />
                         <span className="text-sm">
                         {t('signupPrompt')} <Link to="/signup" className="text-blue-600">{t('signup')}</Link>
