@@ -19,23 +19,41 @@ import AdminLogin from "./components/auth/Adminlogin";
 import AdminSignup from "./components/auth/AdminSignup";
 import Stats from "./components/dashboard/Stats";
 import Admin from "./components/dashboard/Admin";
+import Success from "./components/admin/Success";
 import ManageUsers from "./components/dashboard/ManageUsers";
 import ManageServices from "./components/dashboard/ManageServices";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Cancel from "./components/admin/Cancel";
+import VerificationForm from "./components/auth/VerificationForm";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import { UserProvider } from "./context/UserContext";
+import ResetPassword from "./components/auth/ResetPassword";
 
 // Set up routes
 const appRouter = createBrowserRouter([
   {
-    path: '/',
+    path: '/home',
     element: <Home />
   },
   {
-    path: '/login',
+    path: '/',
     element: <Login />
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />
+  },
+  {
+    path: '/reset-password/:id/:token',
+    element: <ResetPassword />,
   },
   {
     path: '/signup',
     element: <Signup />
+  },
+  {
+    path: '/verify-email',
+    element: <VerificationForm /> 
   },
   {
     path: '/jobs',
@@ -111,16 +129,27 @@ const appRouter = createBrowserRouter([
     path: '/admin/jobs/:id/recommendations',
     element: <Applicants />
   }
+  ,
+  {
+    path: '/cancel',
+    element: <Cancel />
+  },
+  {
+    path: '/success',
+    element: <Success />
+  }
 ]);
 
 // Define App component
 function App() {
   return (
-    <I18nextProvider i18n={i18next}> {/* Wrap with I18nextProvider */}
-      <GoogleOAuthProvider clientId="741213674118-ti3t2m7v9nf3etrc38h66nt9ojmh8qp1.apps.googleusercontent.com">
-        <RouterProvider router={appRouter} />
-      </GoogleOAuthProvider>
-    </I18nextProvider>
+    <UserProvider>  {/* Wrap your app with UserProvider */}
+      <I18nextProvider i18n={i18next}>
+        <GoogleOAuthProvider clientId="your-google-client-id">
+          <RouterProvider router={appRouter} />
+        </GoogleOAuthProvider>
+      </I18nextProvider>
+    </UserProvider>
   );
 }
 
