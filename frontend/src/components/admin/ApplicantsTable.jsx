@@ -1,34 +1,35 @@
-import { useState } from 'react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { MoreHorizontal } from 'lucide-react';
-import PropTypes from 'prop-types';
-import { toast } from 'sonner';
-import { APPLICATION_API_END_POINT } from '@/utils/constant';
-import axios from 'axios';
-import Payment from './Payment'; // Import the Payment component
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
+import axios from "axios";
+import Payment from "./Payment";
 
 const shortlistingStatus = ["Accepted", "Rejected"];
 
-const ApplicantsTable = ({ applicants }) => {
+const ApplicantsTable = ({ applicants, job }) => {
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-    const [paymentStatus, setPaymentStatus] = useState({}); // Payment status tracking
-    const [selectedStatus, setSelectedStatus] = useState({}); // Track selected status for each applicant
+    const [paymentStatus, setPaymentStatus] = useState({});
+    const [selectedStatus, setSelectedStatus] = useState({});
 
     // Function to handle applicant status update and payment logic
-    const statusHandler = async (status, id, salary, fullname) => {
-        if (status === 'Accepted' && !paymentStatus[id]) {
+    const statusHandler = async (status, applicant) => {
+        const { _id, fullname } = applicant.applicant;
+        const salary = job?.salary || job?.jobSalary || 0; // Fallback to jobSalary if salary is undefined
+
+        if (status === "Accepted" && !paymentStatus[_id]) {
             // Open payment modal if "Accepted" is selected and payment hasn't been made yet
-            setSelectedApplicant({ id, fullname, salary });
+            setSelectedApplicant({ id: _id, fullname, salary });
             setIsPaymentModalOpen(true);
         } else {
-            // If status is not "Accepted", directly update the status
             try {
                 axios.defaults.withCredentials = true;
-                const res = await axios.post(`${APPLICATION_API_END_POINT}/status/${id}/update`, { status });
+                const res = await axios.post(`/api/application/status/${_id}/update`, { status });
                 if (res.data.success) {
-                    setSelectedStatus(prevState => ({ ...prevState, [id]: status }));
+                    setSelectedStatus((prevState) => ({ ...prevState, [_id]: status }));
                     toast.success(res.data.message);
                 }
             } catch (error) {
@@ -37,41 +38,22 @@ const ApplicantsTable = ({ applicants }) => {
         }
     };
 
-    // Function to handle successful payment and update the applicant status
+    // Function to handle successful payment
     const handlePaymentSuccess = async (applicantId) => {
         try {
-            // Update the payment status locally
-            setPaymentStatus(prevState => ({ ...prevState, [applicantId]: true }));
-            setSelectedStatus(prevState => ({ ...prevState, [applicantId]: "Accepted" }));
+            setPaymentStatus((prevState) => ({ ...prevState, [applicantId]: true }));
+            setSelectedStatus((prevState) => ({ ...prevState, [applicantId]: "Accepted" }));
 
-            // Now update the status on the server
             axios.defaults.withCredentials = true;
-            const res = await axios.post(`${APPLICATION_API_END_POINT}/status/${applicantId}/update`, { status: 'Accepted' });
+            const res = await axios.post(`/api/application/status/${applicantId}/update`, { status: "Accepted" });
 
             if (res.data.success) {
-                toast.success('Payment successful and status updated');
+                toast.success("Payment successful and status updated");
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || 'An error occurred while updating the status');
+            toast.error(error.response?.data?.message || "An error occurred while updating the status");
         }
     };
-
-    const sortedApplicants = [...applicants]?.sort((a, b) => {
-        const experienceA = a?.applicant?.profile?.experience || 0;
-        const experienceB = b?.applicant?.profile?.experience || 0;
-        const ageA = a?.applicant?.profile?.age || 0;
-        const ageB = b?.applicant?.profile?.age || 0;
-    
-        // Sort by experience in descending order
-        if (experienceA !== experienceB) {
-            return experienceB - experienceA;  // If experiences are different, sort by experience (descending)
-        }
-    
-        // If experiences are the same, sort by age in ascending order (younger applicants come first)
-        return ageA - ageB;
-    });
-    
-
 
     return (
         <div>
@@ -88,66 +70,77 @@ const ApplicantsTable = ({ applicants }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {
-                        sortedApplicants?.length > 0
-                            ? sortedApplicants.map((item) => (
-                                <TableRow key={item._id}>
-                                    <TableCell>{item?.applicant?.fullname}</TableCell>
-                                    <TableCell>{item?.applicant?.email}</TableCell>
-                                    <TableCell>{item?.applicant?.phoneNumber}</TableCell>
-                                    <TableCell>
-                                        {item?.applicant?.profile?.resume
-                                            ? <a className="text-blue-600 cursor-pointer" href={item?.applicant?.profile?.resume} target="_blank" rel="noopener noreferrer">
-                                                {item?.applicant?.profile?.resumeOriginalName}
-                                            </a>
-                                            : <span>NA</span>
-                                        }
-                                    </TableCell>
-                                    <TableCell>{item?.createdAt.split("T")[0]}</TableCell>
-                                    <TableCell className="float-right cursor-pointer">
-                                        <Popover>
-                                            <PopoverTrigger>
-                                                <MoreHorizontal />
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-32">
-                                                {shortlistingStatus.map((status, index) => (
-                                                    <div
-                                                        key={index}
-                                                        onClick={() => statusHandler(status, item?._id, item?.salary, item?.applicant?.fullname)}
-                                                        className={`flex w-fit items-center my-2 cursor-pointer ${selectedStatus[item._id] === status ? 'font-bold text-blue-600' : ''}`}
-                                                    >
-                                                        <span>{status}</span>
-                                                    </div>
-                                                ))}
-                                            </PopoverContent>
-                                        </Popover>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                            : (
-                                <TableRow>
-                                    <TableCell colSpan="6" className="text-center">No applicants found</TableCell>
-                                </TableRow>
-                            )
-                    }
+                    {applicants?.length > 0 ? (
+                        applicants.map((item) => (
+                            <TableRow key={item._id}>
+                                <TableCell>{item?.applicant?.fullname}</TableCell>
+                                <TableCell>{item?.applicant?.email}</TableCell>
+                                <TableCell>{item?.applicant?.phoneNumber}</TableCell>
+                                <TableCell>
+                                    {item?.applicant?.profile?.resume ? (
+                                        <a
+                                            className="text-blue-600 cursor-pointer"
+                                            href={item?.applicant?.profile?.resume}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {item?.applicant?.profile?.resumeOriginalName}
+                                        </a>
+                                    ) : (
+                                        <span>NA</span>
+                                    )}
+                                </TableCell>
+                                <TableCell>{item?.createdAt.split("T")[0]}</TableCell>
+                                <TableCell className="float-right cursor-pointer">
+                                    <Popover>
+                                        <PopoverTrigger>
+                                            <MoreHorizontal />
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-32">
+                                            {shortlistingStatus.map((status, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => statusHandler(status, item)}
+                                                    className={`flex w-fit items-center my-2 cursor-pointer ${
+                                                        selectedStatus[item._id] === status ? "font-bold text-blue-600" : ""
+                                                    }`}
+                                                >
+                                                    <span>{status}</span>
+                                                </div>
+                                            ))}
+                                        </PopoverContent>
+                                    </Popover>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan="6" className="text-center">
+                                No applicants found
+                            </TableCell>
+                        </TableRow>
+                    )}
                 </TableBody>
             </Table>
 
-            {selectedApplicant && (
+            {selectedApplicant && isPaymentModalOpen && (
                 <Payment
                     isOpen={isPaymentModalOpen}
                     onClose={() => setIsPaymentModalOpen(false)}
-                    applicant={selectedApplicant} // Pass the whole selectedApplicant
-                    onPaymentSuccess={() => handlePaymentSuccess(selectedApplicant.id)} // Pass the applicant ID
+                    applicant={selectedApplicant}
+                    onPaymentSuccess={() => handlePaymentSuccess(selectedApplicant.id)}
                 />
             )}
         </div>
     );
 };
 
-// Adding PropTypes to validate props
 ApplicantsTable.propTypes = {
-    applicants: PropTypes.array.isRequired,  // Expect applicants as an array
+    applicants: PropTypes.array.isRequired,
+    job: PropTypes.shape({
+        salary: PropTypes.number,
+        jobSalary: PropTypes.number,
+    }), // Made optional
 };
 
 export default ApplicantsTable;
