@@ -60,13 +60,13 @@ const AdminJobsTable = () => {
                                             <span>Applicants</span>
                                         </div>
                                         {/* New button to view recommended applicants */}
-                                        <div
+                                        {/* <div
                                             onClick={() => navigate(`/admin/jobs/${job._id}/recommendations`)}
                                             className="flex items-center w-fit gap-2 cursor-pointer mt-2"
                                         >
                                             <Eye className="w-4" />
                                             <span>Recommended</span>
-                                        </div>
+                                        </div> */}
                                     </PopoverContent>
                                 </Popover>
                             </TableCell>
