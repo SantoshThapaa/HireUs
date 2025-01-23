@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { USER_API_END_POINT } from "@/utils/constant";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -15,16 +16,12 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3001/forgot-password", { email }, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-
-      if (res.data.Status === "Success") {
+      const res = await axios.post(`${USER_API_END_POINT}/forgot-password`, { email });
+      if (res.data.success) {
         toast.success(t("passwordResetEmailSent"));
-        navigate("/login");
+        navigate("/");
+      } else {
+        toast.error(t(res.data.message || "errorOccurred"));
       }
     } catch (error) {
       console.error(error);
