@@ -41,7 +41,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-    
+        
         const formData = new FormData();
         formData.append("fullname", input.fullname);
         formData.append("age", input.age);
@@ -50,8 +50,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         formData.append("bio", input.bio);
         formData.append("experience", input.experience);
         formData.append("skills", input.skills);
-    
-        // Only append the file if it exists
+        
         if (input.file) {
             formData.append("file", input.file);
         }
@@ -64,7 +63,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             });
     
             if (res.data.success) {
-                dispatch(setUser(res.data.user));
+                // Update the Redux store with the new profile data
+                dispatch(setUser(res.data.user)); 
                 toast.success(res.data.message);
                 setOpen(false);
             } else {
@@ -78,6 +78,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             setLoading(false);
         }
     };
+    
     
 
     return (
