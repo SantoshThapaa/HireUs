@@ -13,6 +13,7 @@ const Applicants = () => {
     const dispatch = useDispatch();
     const [allApplicants, setAllApplicantsState] = useState([]);
     const [recommendedApplicants, setRecommendedApplicants] = useState([]);
+    const [jobDetails, setJobDetails] = useState(null); // Added state for job details
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -26,6 +27,9 @@ const Applicants = () => {
                     // Save all applicants to state and Redux
                     setAllApplicantsState(res.data.job.applications);
                     dispatch(setAllApplicants(res.data.job.applications));
+
+                    // Set job details to be passed to ApplicantsTable
+                    setJobDetails(res.data.job);
 
                     const jobPositions = res.data.job?.position || 0;  // Get number of available positions
 
@@ -67,7 +71,6 @@ const Applicants = () => {
         fetchAllApplicants();
     }, [params.id, dispatch]);
 
-
     if (loading) return <div>Loading...</div>;
 
     return (
@@ -77,12 +80,14 @@ const Applicants = () => {
                 <h1 className='font-bold text-xl my-5'>
                     All Applicants ({allApplicants.length})
                 </h1>
-                <ApplicantsTable applicants={allApplicants} />
+                {/* Pass the jobDetails as prop to ApplicantsTable */}
+                <ApplicantsTable applicants={allApplicants} job={jobDetails} />
 
                 <h1 className='font-bold text-xl my-5'>
                     Recommended Applicants ({recommendedApplicants.length})
                 </h1>
-                <ApplicantsTable applicants={recommendedApplicants} />
+                {/* Pass the jobDetails as prop to ApplicantsTable */}
+                <ApplicantsTable applicants={recommendedApplicants} job={jobDetails} />
             </div>
         </div>
     );
