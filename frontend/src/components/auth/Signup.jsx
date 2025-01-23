@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../shared/Navbar";
+// import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -57,16 +57,18 @@ const Signup = () => {
                 withCredentials: true,
             });
             if (res.data.success) {
-                navigate("/login");
                 toast.success(res.data.message);
-            }
+                navigate("/verify-email", { state: { email: input.email } }); 
+              }
+              
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Registration failed");
         } finally {
             dispatch(setLoading(false));
         }
-    }
+    };
+    
 
     useEffect(() => {
         if (user) {
@@ -76,7 +78,7 @@ const Signup = () => {
 
     return (
         <div>
-            <Navbar />
+            {/* <Navbar />   */}
             <div className="flex items-center justify-center max-w-7xl mx-auto">
                 <form onSubmit={submitHandler} className="w-1/2 border border-gray-200 rounded-md p-4 my-10">
                     <h1 className="font-bold text-xl mb-5">{t('signupTitle')}</h1>
@@ -116,7 +118,7 @@ const Signup = () => {
                         loading ? <Button className="w-full my-4"><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('pleaseWait')}</Button>
                             : <Button type="submit" className="w-full my-4 bg-[#45cfc1] hover:bg-[#32b4a7]">{t('signup')}</Button>
                     }
-                    <span className="text-sm">{t('alreadyHaveAccount')} <Link to="/login" className="text-blue-600">{t('login')}</Link></span>
+                    <span className="text-sm">{t('alreadyHaveAccount')} <Link to="/" className="text-blue-600">{t('login')}</Link></span>
                 </form>
             </div>
         </div>
