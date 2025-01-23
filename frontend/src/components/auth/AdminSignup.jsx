@@ -49,7 +49,7 @@ const AdminSignup = () => {
 
     useEffect(() => {
         if (user) {
-            navigate("/");
+            navigate("/adminLogin");
         }
     }, [user]);
 
