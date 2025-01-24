@@ -1,5 +1,5 @@
 import express from "express";
-import path from 'path';
+import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -10,8 +10,8 @@ import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 import adminRoute from "./routes/admin.route.js";
 import authRouter from "./routes/authRouter.js";
-import Stripe from 'stripe';
-import { fileURLToPath } from 'url'; 
+import Stripe from "stripe";
+import { fileURLToPath } from "url";
 
 // Load environment variables
 dotenv.config();
@@ -20,15 +20,14 @@ dotenv.config();
 const app = express();
 
 // Get the current directory of the module (since __dirname is not available in ES Modules)
-const __filename = fileURLToPath(import.meta.url); 
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-
 // Middleware
-app.use('/output', express.static(path.join(__dirname, 'output')));
+app.use('/api/static', express.static(path.join(__dirname, 'output')));  // Serving the CV files
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -39,8 +38,6 @@ const corsOptions = {
     credentials: true,
 };
 app.use(cors(corsOptions));
-
-const PORT = process.env.PORT || 3000;
 
 // Payment route to create Stripe checkout session
 app.post("/api/create-checkout-session", async (req, res) => {
@@ -94,6 +91,7 @@ app.use("/api/v1/admin", adminRoute);
 app.use("/auth", authRouter);
 
 // Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     connectDB();
     console.log(`Server running at port ${PORT}`);
