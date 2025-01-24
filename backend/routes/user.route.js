@@ -13,6 +13,8 @@ router.route("/reset-password/:id/:token").post(resetPassword);
 router.route("/login").post(login);
 router.route("/profile/update").post(isAuthenticated, singleUpload, updateProfile);
 router.route("/logout").get(logout);
+// Router to generate CV
 router.route("/generate-cv/:userId").get(generateCV);
+
 
 export default router;

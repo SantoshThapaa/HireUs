@@ -73,25 +73,25 @@ export const applyJob = async (req, res) => {
 export const getAppliedJobs = async (req, res) => {
     try {
         const userId = req.id;
-        const application = await Application.find({applicant:userId}).sort({createdAt:-1}).populate({
+        const application = await Application.find({ applicant: userId }).sort({ createdAt: -1 }).populate({
             path: 'job',
-            options:{sort:{createdAt:-1}},
-            populate:{
-                path:'services',
-                options:{sort:{createdAt:-1}}
+            options: { sort: { createdAt: -1 } },
+            populate: {
+                path: 'services',
+                options: { sort: { createdAt: -1 } }
             }
         });
-        if(!application){
+        if (!application) {
             return res.status(404).json({
-                message:"No Applications",
-                success:false
+                message: "No Applications",
+                success: false
             })
         };
         return res.status(200).json({
             application,
-            success:true
+            success: true
         })
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
@@ -129,23 +129,23 @@ export const getApplicants = async (req, res) => {
 };
 
 
-export const updateStatus = async (req,res) => {
+export const updateStatus = async (req, res) => {
     try {
-        const {status} = req.body;
+        const { status } = req.body;
         const applicationId = req.params.id;
-        if(!status){
+        if (!status) {
             return res.status(400).json({
-                message:'status is required',
-                success:false
+                message: 'status is required',
+                success: false
             })
         };
 
         // find the application by applicantion id
-        const application = await Application.findOne({_id:applicationId});
-        if(!application){
+        const application = await Application.findOne({ _id: applicationId });
+        if (!application) {
             return res.status(404).json({
-                message:"Application not found.",
-                success:false
+                message: "Application not found.",
+                success: false
             })
         };
 
@@ -154,88 +154,110 @@ export const updateStatus = async (req,res) => {
         await application.save();
 
         return res.status(200).json({
-            message:"Status updated successfully.",
-            success:true
+            message: "Status updated successfully.",
+            success: true
         });
 
     } catch (error) {
         console.log(error);
     }
 }
+
+// Function to calculate the distance between two coordinates using the Haversine formula
+export const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const toRadians = (degrees) => (degrees * Math.PI) / 180;
+
+    const deltaLat = toRadians(lat2 - lat1);
+    const deltaLon = toRadians(lon2 - lon1);
+
+    const a =
+        Math.sin(deltaLat / 2) ** 2 +
+        Math.cos(toRadians(lat1)) *
+        Math.cos(toRadians(lat2)) *
+        Math.sin(deltaLon / 2) ** 2;
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in kilometers
+};
+
 export const recommendEmployees = async (req, res) => {
     try {
         const jobId = req.params.id;
-
-        // Check if the job exists
         const job = await Job.findById(jobId);
         if (!job) {
-            return res.status(404).json({
-                message: 'Job not found',
-                success: false
-            });
+            return res.status(404).json({ message: "Job not found", success: false });
         }
 
-        // Get all applications for the job and check the experience of the applicants
-        const applications = await Application.find({ job: jobId }).populate('applicant', 'fullname email phoneNumber profile.experience profile.age');  // Optimized query
+        let jobLatitude = job.location.latitude;
+        let jobLongitude = job.location.longitude;
+
+        if (!jobLatitude || !jobLongitude) {
+            if (!job.location || !job.location.address) {
+                return res.status(400).json({ message: "Job location address is missing.", success: false });
+            }
+
+            const { address } = job.location;
+            const coordinates = await getCoordinatesFromAddress(address);
+            jobLatitude = coordinates.latitude;
+            jobLongitude = coordinates.longitude;
+        }
+
+        const applications = await Application.find({ job: jobId }).populate("applicant", "fullname email phoneNumber profile.experience profile.age profile.location");
 
         if (applications.length === 0) {
-            return res.status(404).json({
-                message: 'No applications found for this job',
-                success: false
-            });
+            return res.status(404).json({ message: "No applications found", success: false });
         }
 
-        // First, filter applicants based on experience (greater than or equal to required experience)
-        const filteredApplicants = applications.filter(application => {
+        const filteredApplicants = applications.filter((application) => {
             const applicant = application.applicant;
-            return applicant.profile.experience >= job.experienceLevel;
+            if (!applicant.profile.location || !applicant.profile.location.latitude || !applicant.profile.location.longitude) {
+                return false;
+            }
+
+            const applicantLatitude = applicant.profile.location.latitude;
+            const applicantLongitude = applicant.profile.location.longitude;
+            const distance = calculateDistance(jobLatitude, jobLongitude, applicantLatitude, applicantLongitude);
+
+            return applicant.profile.experience >= job.experienceLevel && distance <= 50;
         });
 
         if (filteredApplicants.length === 0) {
-            return res.status(200).json({
-                message: 'No recommended applicants found based on the required experience.',
-                success: true,
-                recommendedApplicants: []
-            });
+            return res.status(200).json({ message: "No recommended applicants found", success: true, recommendedApplicants: [] });
         }
 
-        // Sort applicants by experience (descending), and for equal experience, by age (ascending)
         const sortedApplicants = filteredApplicants.sort((a, b) => {
             const experienceA = a.applicant.profile.experience;
             const experienceB = b.applicant.profile.experience;
-
-            // If experience is the same, prioritize the younger applicant
             if (experienceA === experienceB) {
                 return a.applicant.profile.age - b.applicant.profile.age;
             }
-
-            // Otherwise, prioritize based on experience
             return experienceB - experienceA;
         });
 
-        // Prepare the response with the recommended applicants
-        const recommendedApplicants = sortedApplicants.map(application => ({
+        const recommendedApplicants = sortedApplicants.map((application) => ({
             fullname: application.applicant.fullname,
             email: application.applicant.email,
             phoneNumber: application.applicant.phoneNumber,
             experience: application.applicant.profile.experience,
-            age: application.applicant.profile.age
+            age: application.applicant.profile.age,
+            distance: calculateDistance(jobLatitude, jobLongitude, application.applicant.profile.location.latitude, application.applicant.profile.location.longitude).toFixed(2),
         }));
 
         return res.status(200).json({
-            message: 'Recommended applicants based on experience and age.',
+            message: "Recommended applicants based on experience, proximity, and age.",
             success: true,
-            recommendedApplicants
+            recommendedApplicants,
         });
-
     } catch (error) {
-        console.error(error);  // Consider using a logging package
-        return res.status(500).json({
-            message: 'An error occurred',
-            success: false
-        });
+        console.error(error);
+        return res.status(500).json({ message: error.message || "An error occurred", success: false });
     }
 };
+
+
+
+
 
 export const getAllApplication = async (req, res) => {
     try {
