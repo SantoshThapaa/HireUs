@@ -1,46 +1,64 @@
 import mongoose from "mongoose";
+
 const userSchema = new mongoose.Schema({
-    fullname:{
-        type:String,
-        required:true
+    fullname: {
+        type: String,
+        required: true,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    verificationCode: {
+        type: String,
+        required: false,
+    },
+    verificationCodeExpiresAt: {
+        type: Date,
+        required: false,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
     },
     phoneNumber: {
         type: String,
         required: true,
     },
-    password:{
-        type:String,
-        required:true,
+    password: {
+        type: String,
+        required: true,
     },
-    role:{
-        type:String,
-        enum:['worker','recruiter'],
-        required:true,
+    role: {
+        type: String,
+        enum: ['worker', 'recruiter'],
+        required: true,
     },
     profile: {
         profilePhoto: {
-            type: String
+            type: String,
+        },
+        age: {
+            type: Number,
+            min: 0,  
+            default: 18, 
         },
         resume: {
-            type: String
+            type: String,
         },
         resumeOriginalName: {
-            type: String
+            type: String,
         },
         bio: {
-            type: String
+            type: String,
         },
         experience: {
             type: Number,
-            default: 0  // Ensure this is set to a number
+            default: 0, // Ensure this is set to a number
         },
-        skills: [String]
-    }
+        skills: [String],
+    },
 }, { timestamps: true });
 
-export const User = mongoose.model('User',userSchema);
+export const User = mongoose.model('User', userSchema);

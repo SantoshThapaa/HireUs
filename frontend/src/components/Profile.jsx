@@ -10,27 +10,41 @@ import AppliedJobTable from "./AppliedJobTable";
 import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+// import { UserContext } from '@/context/UserContext';
+import { USER_API_END_POINT } from '@/utils/constant';
 import { UserContext } from '@/context/UserContext';
 
 
 const isResume = true;
 
 const Profile = () => {
-  const { userId } = useContext(UserContext);
+  // Access userId from context
+  const { userId } = useContext(UserContext);  // Use context to get userId
   const [open, setOpen] = useState(false);
   const { user } = useSelector(store => store.auth);
 
   const generateCVHandler = async () => {
     try {
-      const response = await axios.get(`/api/user/generate-cv/${userId}`);
+      if (!userId || userId === 'your-user-id') {
+        alert("User ID is missing or incorrect.");
+        return;
+      }
+
+      const response = await axios.get(`${USER_API_END_POINT}/generate-cv/${userId}`);
       if (response.data.success) {
+        const cvPath = response.data.cvPath;
+        const downloadUrl = `/api/static${cvPath}`;
         alert("CV generated successfully! You can download it.");
+        window.open(downloadUrl, "_blank");
       }
     } catch (error) {
       console.error("Error generating CV", error);
       alert("Something went wrong.");
     }
   };
+
+
+
   if (!user) return <div>Loading...</div>;
 
   return (
@@ -51,10 +65,10 @@ const Profile = () => {
             <Pen />
           </Button>
         </div>
-        
+
         <div className="my-5">
           {/* Age Section */}
-         <div className="flex items-center gap-3 my-2">
+          <div className="flex items-center gap-3 my-2">
             <User />
             <span>{user?.profile?.age || "Age not specified"} yrs</span>
           </div>
@@ -86,8 +100,8 @@ const Profile = () => {
           <Label className="text-md font-bold">Resume</Label>
           {isResume && user?.profile?.resume
             ? <a target='blank' href={user?.profile?.resume} className='text-blue-500 w-full hover:underline cursor-pointer'>
-                {user?.profile?.resumeOriginalName || "Resume"}
-              </a>
+              {user?.profile?.resumeOriginalName || "Resume"}
+            </a>
             : <span>NA</span>}
         </div>
       </div>
