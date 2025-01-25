@@ -51,7 +51,7 @@ const Navbar = () => {
           <img
             src="/SARATHI.png"
             alt="Sarathi Logo"
-            className="w-28 h-30 object-contain"
+            className="w-28 h-14"
           />
         </div>
 

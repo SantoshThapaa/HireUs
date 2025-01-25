@@ -61,8 +61,8 @@ const ServicesTable = () => {
                     {filterServices?.map((services) => (
                         <TableRow key={services._id}>
                             <TableCell>
-                                <Avatar>
-                                    <AvatarImage src={services.logo} alt="Service Logo" />
+                                <Avatar className="w-28 h-14">
+                                    <AvatarImage src="/SARATHI.png" alt="Service Logo" />
                                 </Avatar>
                             </TableCell>
                             <TableCell>{services.name}</TableCell>

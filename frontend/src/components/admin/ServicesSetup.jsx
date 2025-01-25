@@ -33,10 +33,10 @@ const ServicesSetup = () => {
     };
 
     // Handle file input changes
-    const changeFileHandler = (e) => {
-        const file = e.target.files?.[0];
-        setInput({ ...input, file });
-    };
+    // const changeFileHandler = (e) => {
+    //     const file = e.target.files?.[0];
+    //     setInput({ ...input, file });
+    // };
 
     // Fetch user's location
     const fetchLocation = () => {
@@ -186,10 +186,10 @@ const ServicesSetup = () => {
                                 Fetch Location
                             </Button>
                         </div>
-                        <div>
+                        {/* <div>
                             <Label>Logo</Label>
                             <Input type="file" accept="image/*" onChange={changeFileHandler} />
-                        </div>
+                        </div> */}
                     </div>
                     {loading ? (
                         <Button className="w-full my-4">
