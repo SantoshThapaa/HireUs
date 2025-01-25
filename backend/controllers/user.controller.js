@@ -301,10 +301,20 @@ export const logout = async (req, res) => {
   }
 }
 
-// Update Profile Controller
 export const updateProfile = async (req, res) => {
   try {
-    const { fullname, age, location, email, phoneNumber, skills, bio, experience } = req.body;
+    const {
+      fullname,
+      age,
+      longitude,
+      latitude,
+      email,
+      phoneNumber,
+      skills,
+      bio,
+      experience,
+    } = req.body;
+    console.log(req.body);
     const file = req.file;
     let cloudResponse = null;
 
@@ -326,46 +336,16 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    // Fetch latitude and longitude if location is provided
-    let geoLocation = null;
-    if (location) {
-      try {
-        const geoResponse = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
-          params: {
-            address: location,
-            key: process.env.GOOGLE_MAPS_API_KEY, // Add your Google Maps API Key here
-          },
-        });
-
-        if (
-          geoResponse.data.status === "OK" &&
-          geoResponse.data.results &&
-          geoResponse.data.results.length > 0
-        ) {
-          const result = geoResponse.data.results[0];
-          geoLocation = {
-            latitude: result.geometry.location.lat,
-            longitude: result.geometry.location.lng,
-          };
-        } else {
-          return res.status(400).json({
-            message: "Unable to fetch location coordinates. Please check the address.",
-            success: false,
-          });
-        }
-      } catch (geoError) {
-        console.error("Geocoding Error:", geoError.message);
-        return res.status(500).json({
-          message: "Failed to fetch location coordinates.",
-          success: false,
-        });
-      }
-    }
-
+    
     // Update user profile fields
     if (fullname) user.fullname = fullname;
-    if (age !== undefined) user.age = age; // Update age (ensure null or undefined check)
-    if (geoLocation) user.location = geoLocation; // Save fetched latitude and longitude
+    // console.log(location, user.profile.location, "location");
+    if (age !== undefined) user.profile.age = age; // Update age (ensure null or undefined check)
+    if (longitude && latitude)
+      user.profile.location = {
+        longitude,
+        latitude,
+      }; // Save fetched latitude and longitude
     if (email) user.email = email;
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (bio) user.profile.bio = bio;
@@ -388,8 +368,8 @@ export const updateProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong.", success: false });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong.", success: false });
   }
 };
-
-

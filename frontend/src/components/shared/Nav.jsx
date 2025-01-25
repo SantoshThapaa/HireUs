@@ -17,7 +17,7 @@ const Nav = () => {
         {/* Logo Section */}
         <div className="flex items-center">
           <img
-            src="/logo-01.png"
+            src="/SARATHI.png"
             alt="Sarathi Logo"
             className="w-28 h-10 object-contain"
           />

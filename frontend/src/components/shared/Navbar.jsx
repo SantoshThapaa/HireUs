@@ -49,7 +49,7 @@ const Navbar = () => {
         {/* Logo design */}
         <div className="flex items-center gap-4">
           <img
-            src="/logo-01.png"
+            src="/SARATHI.png"
             alt="Sarathi Logo"
             className="w-28 h-30 object-contain"
           />
