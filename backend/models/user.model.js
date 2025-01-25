@@ -61,6 +61,18 @@ const userSchema = new mongoose.Schema({
             default: 0, // Ensure this is set to a number
         },
         skills: [String],
+        bookmarkedJobs: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Job", // Reference to the Job model
+            },
+          ],
+          savedJobs: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Job", // Reference to the Job model
+            },
+          ],
     },
 }, { timestamps: true });
 

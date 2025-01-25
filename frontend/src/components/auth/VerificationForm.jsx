@@ -39,7 +39,7 @@ const VerificationForm = () => {
           className="w-full border rounded p-2 mb-4"
           placeholder="Enter code"
         />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <button type="submit" className="w-full bg-[#45cfc1] text-white p-2 rounded">
           Verify
         </button>
       </form>

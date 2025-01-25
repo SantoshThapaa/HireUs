@@ -4,9 +4,46 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 
-const Job = ({ job = {} }) => { // default parameter
+const Job = ({ job = {} }) => {
     const navigate = useNavigate();
+    const [isSaved, setIsSaved] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    // Check local storage on component mount
+    useEffect(() => {
+        const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+        setIsSaved(savedJobs.includes(job._id));
+        const bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarkedJobs")) || [];
+        setIsBookmarked(bookmarkedJobs.includes(job._id));
+    }, [job._id]);
+
+    const handleSaveForLater = () => {
+        const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+        if (savedJobs.includes(job._id)) {
+            const updatedJobs = savedJobs.filter((id) => id !== job._id);
+            localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
+            setIsSaved(false);
+        } else {
+            savedJobs.push(job._id);
+            localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+            setIsSaved(true);
+        }
+    };
+
+    const handleBookmark = () => {
+        const bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarkedJobs")) || [];
+        if (bookmarkedJobs.includes(job._id)) {
+            const updatedJobs = bookmarkedJobs.filter((id) => id !== job._id);
+            localStorage.setItem("bookmarkedJobs", JSON.stringify(updatedJobs));
+            setIsBookmarked(false);
+        } else {
+            bookmarkedJobs.push(job._id);
+            localStorage.setItem("bookmarkedJobs", JSON.stringify(bookmarkedJobs));
+            setIsBookmarked(true);
+        }
+    };
 
     const daysAgoFunction = (mongodbTime) => {
         const createdAt = new Date(mongodbTime);
@@ -23,7 +60,12 @@ const Job = ({ job = {} }) => { // default parameter
                         ? "Today"
                         : `${daysAgoFunction(job?.createdAt)} days ago`}
                 </p>
-                <Button variant="outline" className="rounded-full" size="icon">
+                <Button
+                    variant="outline"
+                    className={`rounded-full ${isBookmarked ? "bg-[#45cfc1] text-white" : ""}`}
+                    size="icon"
+                    onClick={handleBookmark}
+                >
                     <Bookmark />
                 </Button>
             </div>
@@ -50,14 +92,19 @@ const Job = ({ job = {} }) => { // default parameter
                     {job?.jobType || "N/A"}
                 </Badge>
                 <Badge className="text-[#5fa794] font-bold" variant="ghost">
-                    NRs.{job?.salary || 0}k
+                    NRs.{job?.salary || 0}
                 </Badge>
             </div>
             <div className="flex items-center gap-2 mt-4">
                 <Button onClick={() => navigate(`/description/${job?._id}`)} variant="outline">
                     Details
                 </Button>
-                <Button className="bg-[#45cfc1]">Save For Later</Button>
+                <Button
+                    className={`bg-[#45cfc1] ${isSaved ? "opacity-50 cursor-not-allowed" : ""}`}
+                    onClick={handleSaveForLater}
+                >
+                    {isSaved ? "Saved" : "Save For Later"}
+                </Button>
             </div>
         </div>
     );

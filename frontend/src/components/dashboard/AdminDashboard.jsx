@@ -10,14 +10,14 @@ const AdminDashboard = () => {
     const dispatch = useDispatch();
     const admin = useSelector((state) => {
         console.log("Redux State:", state);  
-        return state.authadmin?.admin;  
+        return state.authadmin?.admin;  // Safely access the admin object
     });
 
     useEffect(() => {
         const fetchAdminData = async () => {
             if (!admin) {  // Only fetch if admin data is not yet available
                 try {
-                    const res = await axios.get(`${ADMIN_API_END_POINT}/admin/data`, {
+                    const res = await axios.get(`${ADMIN_API_END_POINT}/admindata`, {
                         withCredentials: true,  // Ensure credentials are included with the request
                     });
 
@@ -40,6 +40,14 @@ const AdminDashboard = () => {
         };
         fetchAdminData();
     }, [admin, dispatch]);  
+
+    // Adding a fallback to handle cases where admin data is still loading or unavailable
+    if (!admin) {
+        return (
+            <div>Loading...</div>  // Display loading text or a spinner while fetching admin data
+        );
+    }
+
     return (
         <div>
             <AdminNav />
@@ -51,7 +59,7 @@ const AdminDashboard = () => {
                         <div className="flex flex-col items-center md:w-1/3">
                             <div className="w-32 h-32 rounded-full border-4 border-gray-200">
                                 <img
-                                    src="/logo-01.png"  // Replace this with the admin's profile image URL if available
+                                    src={admin.profileImage || "/logo-01.png"}  // Use profile image from admin data if available
                                     alt="Profile"
                                     className="rounded-full"
                                 />
@@ -62,13 +70,13 @@ const AdminDashboard = () => {
                                 <div>
                                     <p className="text-sm text-gray-500">Username:</p>
                                     <p className="text-lg font-medium text-gray-800">
-                                        {admin.fullname}
+                                        {admin.fullname || 'N/A'}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500">Email:</p>
                                     <p className="text-lg font-medium text-gray-800">
-                                        {admin.email}
+                                        {admin.email || 'N/A'}
                                     </p>
                                 </div>
                                 <div>
@@ -80,7 +88,7 @@ const AdminDashboard = () => {
                                 <div>
                                     <p className="text-sm text-gray-500">Join Date:</p>
                                     <p className="text-lg font-medium text-gray-800">
-                                        {new Date(admin?.createdAt).toLocaleDateString()}
+                                        {admin.createdAt ? new Date(admin.createdAt).toLocaleDateString() : 'N/A'}
                                     </p>
                                 </div>
                             </div>

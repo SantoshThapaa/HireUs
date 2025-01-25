@@ -7,6 +7,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 const ManageServices = () => {
     const [adminData, setAdminData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchAdminData = async () => {
@@ -30,6 +31,47 @@ const ManageServices = () => {
         fetchAdminData();
     }, []);
 
+    // Binary Sort Implementation (sorting by service name)
+    const binarySort = (arr) => {
+        for (let i = 1; i < arr.length; i++) {
+            let key = arr[i];
+            let left = 0;
+            let right = i;
+
+            while (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                const midValue = arr[mid].name.toLowerCase();
+
+                if (midValue < key.name.toLowerCase()) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+
+            for (let j = i; j > left; j--) {
+                arr[j] = arr[j - 1];
+            }
+            arr[left] = key;
+        }
+        return arr;
+    };
+
+    // Handle search input
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    // Sorted Services Array
+    const sortedServices = adminData?.data?.services ? binarySort([...adminData.data.services]) : [];
+
+    // Filter services based on search term (after sorting)
+    const filteredServices = searchTerm
+        ? sortedServices.filter((service) =>
+              service.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : sortedServices;
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -43,9 +85,18 @@ const ManageServices = () => {
             <AdminNavbar />
             <div className="min-h-screen bg-white flex flex-col p-8 gap-8">
                 <h1 className="text-2xl font-semibold text-gray-800 mb-6">Manage Services</h1>
+
+                {/* Search Input */}
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="p-2 mb-4 border border-gray-300 rounded"
+                    placeholder="Search by name..."
+                />
+
                 {/* Services Table */}
                 <div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Services</h3>
                     <Table>
                         <TableCaption>List of all services</TableCaption>
                         <TableHeader>
@@ -57,15 +108,20 @@ const ManageServices = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {adminData.data.services && adminData.data.services.length > 0 ? (
-                                adminData.data.services.map((service) => (
+                            {filteredServices.length > 0 ? (
+                                filteredServices.map((service) => (
                                     <TableRow key={service._id}>
                                         <TableCell>{service.name || "N/A"}</TableCell>
                                         <TableCell>{service.description || "N/A"}</TableCell>
                                         <TableCell>{service.location || "N/A"}</TableCell>
                                         <TableCell>
                                             {service.website ? (
-                                                <a href={service.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                                <a
+                                                    href={service.website}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-500 underline"
+                                                >
                                                     {service.website}
                                                 </a>
                                             ) : (

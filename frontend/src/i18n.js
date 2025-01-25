@@ -12,12 +12,19 @@ i18next
         resources: {
             en: {
                 translation: {
+                    forgotPasswordTitle: "Forgot Password?",
                     home: "Home",
                     companies: "Companies",
                     jobs: "Jobs",
+                    "enterYourEmail": "Enter your Email",
+                    send: "Send",
+                    newPassword: "New Password",
+                    enterNewPassword: "Enter New Password",
+                    confirmPassword: "Confirm Password",
+                    updatePassword: "Update Password",
                     browse: "Browse",
                     login: "Login",
-                    dashboard : "Dashboard",
+                    dashboard: "Dashboard",
                     signup: "Signup",
                     viewProfile: "View Profile",
                     logout: "Logout",
@@ -119,6 +126,13 @@ i18next
             },
             ne: {
                 translation: {
+                    forgotPasswordTitle: "पासवर्ड बिर्सनुभयो?",
+                    enterYourEmail: "तपाईंको ईमेल प्रविष्ट गर्नुहोस्",
+                    send: "पठाउनुहोस्",
+                    newPassword: "नयाँ पासवर्ड",
+                    enterNewPassword: "नयाँ पासवर्ड प्रविष्ट गर्नुहोस्",
+                    confirmPassword: "पासवर्ड पुष्टि गर्नुहोस्",
+                    updatePassword: "पासवर्ड अद्यावधिक गर्नुहोस्",
                     home: "गृहपृष्ठ",
                     companies: "कम्पनीहरू",
                     jobs: "काम",
@@ -221,6 +235,13 @@ i18next
             },
             hi: {
                 translation: {
+                    forgotPasswordTitle: "पासवर्ड भूल गए?",
+                    "enterYourEmail": "अपना ईमेल दर्ज करें",
+                    send: "भेजें",
+                    newPassword: "नया पासवर्ड",
+                    enterNewPassword: "नया पासवर्ड दर्ज करें",
+                    confirmPassword: "पासवर्ड की पुष्टि करें",
+                    updatePassword: "पासवर्ड अपडेट करें",
                     home: "होम",
                     jobs: "नौकरियां",
                     companies: "कंपनियां",

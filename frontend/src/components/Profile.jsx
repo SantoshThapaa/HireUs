@@ -24,9 +24,9 @@ const Profile = () => {
         alert('User ID is missing or incorrect.');
         return;
       }
-  
+
       const response = await axios.get(`${USER_API_END_POINT}/generate-cv/${user._id}`, { responseType: 'blob' });
-  
+
       // Check if the response is successful
       if (response.status === 200) {
         // Create a link element to download the PDF
@@ -43,7 +43,7 @@ const Profile = () => {
       alert('Something went wrong.');
     }
   };
-  
+
 
   // Check if user data is not available
   if (!user) return <div>Loading...</div>;
@@ -55,7 +55,7 @@ const Profile = () => {
         {/* Profile Header */}
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
-            <Avatar className="h-24 w-24">
+          <Avatar className="h-24 w-24">
               <AvatarImage src={user?.profile?.profilePhoto || user?.picture} alt="profile" />
             </Avatar>
             <div>

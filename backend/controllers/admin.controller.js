@@ -21,10 +21,15 @@ export const adminregister = async (req, res) => {
     let cloudResponse = null;
 
     if (file) {
-      const fileUri = getDataUri(file);
-      cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
-        resource_type: "auto",
-      });
+      try {
+        const fileUri = getDataUri(file);
+        cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+          resource_type: "auto",
+        });
+      } catch (cloudError) {
+        console.error("Cloudinary upload failed:", cloudError);
+        return res.status(500).json({ message: "Failed to upload profile image.", success: false });
+      }
     }
 
     const existingAdmin = await Admin.findOne({ email });
@@ -111,6 +116,9 @@ export const getAdminData = async (req, res) => {
     res.status(200).json({ admin: adminData, success: true });
   } catch (error) {
     console.error("Error in getAdminData:", error);
+    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Unauthorized. Token invalid or expired.", success: false });
+    }
     res.status(500).json({ message: "Server error.", success: false });
   }
 };
@@ -153,7 +161,7 @@ export const getAdminDashboardData = async (req, res) => {
     });
   }
 };
-const getAdminDashboardStats = async (req, res) => {
+export const getAdminDashboardStats = async (req, res) => {
   try {
     // Get the count of applicants with their statuses (selected, pending, rejected)
     const applicantStats = await Application.aggregate([
@@ -224,6 +232,5 @@ const getAdminDashboardStats = async (req, res) => {
   }
 };
 
-export { getAdminDashboardStats };
 
 

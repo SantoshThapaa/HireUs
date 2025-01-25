@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/redux/authSlice";
 import { useTranslation } from 'react-i18next'; // Import useTranslation
+import Nav from '../shared/Nav';
 
 const Signup = () => {
     const { t } = useTranslation(); // Initialize translation hook
@@ -78,7 +79,7 @@ const Signup = () => {
 
     return (
         <div>
-            {/* <Navbar />   */}
+            <Nav/>  
             <div className="flex items-center justify-center max-w-7xl mx-auto">
                 <form onSubmit={submitHandler} className="w-1/2 border border-gray-200 rounded-md p-4 my-10">
                     <h1 className="font-bold text-xl mb-5">{t('signupTitle')}</h1>

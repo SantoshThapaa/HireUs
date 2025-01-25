@@ -122,7 +122,7 @@ const JobDescription = () => {
         <h1 className="font-bold my-1">
           Salary:{" "}
           <span className="pl-4 font-normal text-gray-800">
-            NRs.{singleJob?.salary}k
+            NRs.{singleJob?.salary}
           </span>
         </h1>
         <h1 className="font-bold my-1">

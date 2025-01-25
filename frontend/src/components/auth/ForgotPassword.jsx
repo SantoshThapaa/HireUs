@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { USER_API_END_POINT } from "@/utils/constant";
+import Nav from "../shared/Nav";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -30,25 +31,28 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-secondary">
-      <div className="bg-white p-6 rounded-md shadow-md w-1/3">
-        <h4 className="text-xl font-bold mb-4">{t("forgotPasswordTitle")}</h4>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <Label htmlFor="email">{t("email")}</Label>
-            <Input
-              type="email"
-              placeholder={t("enterEmail")}
-              autoComplete="off"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            {t("send")}
-          </Button>
-        </form>
+    <div>
+      <Nav />
+      <div className="flex items-center justify-center min-h-screen bg-secondary">
+        <div className="bg-white p-6 rounded-md shadow-md w-1/3">
+          <h4 className="text-xl font-bold mb-4">{t("forgotPasswordTitle")}</h4>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <Label htmlFor="email">{t("email")}</Label>
+              <Input
+                type="email"
+                placeholder={t("Enter your Email")}
+                autoComplete="off"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <Button type="submit" className="w-full bg-[#45cfc1]">
+              {t("send")}
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

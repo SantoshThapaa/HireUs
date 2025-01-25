@@ -32,6 +32,7 @@ export const postJob = async (req, res) => {
         console.log(error);
     }
 }
+
 //worker
 export const getAllJobs = async (req, res) => {
     try {
@@ -59,6 +60,101 @@ export const getAllJobs = async (req, res) => {
         console.log(error);
     }
 }
+// Bookmark Job - Adds the job to the user's bookmarked list
+export const bookmarkJob = async (req, res) => {
+    try {
+        const { jobId } = req.body;
+        const userId = req.id;
+
+        // Check if the job exists
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found",
+                success: false,
+            });
+        }
+
+        // Find the user and update their bookmarkedJobs list
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        // Add job to the bookmarkedJobs if not already bookmarked
+        if (user.bookmarkedJobs.includes(jobId)) {
+            return res.status(400).json({
+                message: "Job already bookmarked",
+                success: false,
+            });
+        }
+
+        user.bookmarkedJobs.push(jobId);
+        await user.save();
+
+        return res.status(200).json({
+            message: "Job bookmarked successfully",
+            success: true,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+        });
+    }
+};
+
+// Save Job for Later - Adds the job to the user's savedJobs list
+export const saveJobForLater = async (req, res) => {
+    try {
+        const { jobId } = req.body;
+        const userId = req.id;
+
+        // Check if the job exists
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found",
+                success: false,
+            });
+        }
+
+        // Find the user and update their savedJobs list
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        // Add job to the savedJobs if not already saved
+        if (user.savedJobs.includes(jobId)) {
+            return res.status(400).json({
+                message: "Job already saved for later",
+                success: false,
+            });
+        }
+
+        user.savedJobs.push(jobId);
+        await user.save();
+
+        return res.status(200).json({
+            message: "Job saved for later successfully",
+            success: true,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+        });
+    }
+};
 //worker
 export const getJobById = async (req, res) => {
     try {

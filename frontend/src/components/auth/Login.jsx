@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import Nav from '../shared/Nav';
 // import { useGoogleLogin } from '@react-oauth/google';
 // import { googleAuth } from '@/api';
 
@@ -88,7 +89,7 @@ const Login = () => {
 
     return (
         <div>
-            {/* <Navbar /> */}
+            <Nav/>
             <div className="flex items-center justify-center max-w-7xl mx-auto">
                 <form onSubmit={submitHandler} className="w-1/2 border border-gray-200 rounded-md p-4 my-10">
                     <h1 className="font-bold text-xl mb-5">{t('loginTitle')}</h1>
@@ -114,7 +115,7 @@ const Login = () => {
                             </div>
                         </RadioGroup>
                     </div>
-                    <Link to="/forgot-password">Forgot Password</Link>
+                    
                     {
                         loading ?
                             <Button className="w-full my-4">
@@ -126,6 +127,7 @@ const Login = () => {
                                 </Button>
                             )
                     }
+                    <Link to="/forgot-password" className="text-blue-600">Forgot Password</Link>
                     <div className='flex flex-col items-center justify-center mt-5 sm:ml-0 lg:ml-18'>
                         {/* <button
                             onClick={googleLogin}

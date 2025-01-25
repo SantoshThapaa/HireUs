@@ -18,7 +18,7 @@ const AdminNav = () => {
       const res = await axios.get(`${ADMIN_API_END_POINT}/adminlogout`, { withCredentials: true });
       if (res.data.success) {
         dispatch(setUser(null)); // Clear user state
-        navigate('/');
+        navigate('/home');
         toast.success(res.data.message);
       }
     } catch (error) {
