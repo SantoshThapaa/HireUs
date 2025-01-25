@@ -62,7 +62,7 @@ const AdminDashboard = () => {
                                         onChange={handleImageChange}
                                     />
                                 </label>
-                                <p className="text-sm text-gray-600">Click image to update</p>
+                                
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">
@@ -114,7 +114,7 @@ const AdminDashboard = () => {
                         <div>
                             <div className="mb-4 text-center">
                                 <img
-                                    src={admin.image}
+                                    src="/SARATHI.png"
                                     alt="Admin Profile"
                                     className="w-32 h-32 rounded-full mx-auto mb-2 object-cover"
                                 />
