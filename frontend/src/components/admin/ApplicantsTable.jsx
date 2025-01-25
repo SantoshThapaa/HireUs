@@ -26,7 +26,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
     return R * c; // Distance in kilometers
 };
 
-const ApplicantsTable = ({ applicants, job }) => {
+const ApplicantsTable = ({ applicants, job, isApplicant = false }) => {
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState({});
@@ -72,22 +72,7 @@ const ApplicantsTable = ({ applicants, job }) => {
         }
     };
 
-    // Calculate distance and recommend applicants
-    const recommendedApplicants = applicants
-        .map((applicant) => {
-            const applicantLatitude = applicant?.applicant?.profile?.location?.latitude || 0;
-            const applicantLongitude = applicant?.applicant?.profile?.location?.longitude || 0;
-            const jobLatitude = job?.location?.latitude || 0;
-            const jobLongitude = job?.location?.longitude || 0;
-
-            const distance = calculateDistance(jobLatitude, jobLongitude, applicantLatitude, applicantLongitude);
-
-            return { ...applicant, distance };
-        })
-        .sort((a, b) => a.distance - b.distance) // Sort by distance (ascending)
-        .slice(0, job?.position || applicants.length); // Limit to job positions or all applicants
-
-    return (
+            return (
         <div>
             <Table>
                 <TableCaption>A list of your recent applied users</TableCaption>
@@ -99,13 +84,13 @@ const ApplicantsTable = ({ applicants, job }) => {
                         <TableHead>Resume</TableHead>
                         <TableHead>Latitude</TableHead>
                         <TableHead>Longitude</TableHead>
-                        <TableHead>Distance (km)</TableHead>
+                        {!isApplicant && <TableHead>Distance (km)</TableHead>}
                         <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {recommendedApplicants?.length > 0 ? (
-                        recommendedApplicants.map((item) => (
+                    {applicants?.length > 0 ? (
+                        applicants.map((item) => (
                             <TableRow key={item._id}>
                                 <TableCell>{item?.applicant?.fullname}</TableCell>
                                 <TableCell>{item?.applicant?.email}</TableCell>
@@ -126,7 +111,7 @@ const ApplicantsTable = ({ applicants, job }) => {
                                 </TableCell>
                                 <TableCell>{item?.applicant?.profile?.location?.latitude || "NA"}</TableCell>
                                 <TableCell>{item?.applicant?.profile?.location?.longitude || "NA"}</TableCell>
-                                <TableCell>{item.distance.toFixed(2)}</TableCell>
+                               { item?.applicant?.distance && <TableCell>{item?.applicant?.distance}</TableCell>}
                                 <TableCell className="float-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger>

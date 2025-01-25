@@ -215,7 +215,7 @@ export const recommendEmployees = async (req, res) => {
             jobLongitude = coordinates.longitude;
         }
 
-        const applications = await Application.find({ job: jobId }).populate("applicant", "fullname email phoneNumber profile.experience profile.age profile.location");
+        const applications = await Application.find({ job: jobId }).populate("applicant", "fullname email phoneNumber profile.experience profile.resume profile.resumeOriginalName profile.age profile.location");
 
         if (applications.length === 0) {
             return res.status(404).json({ message: "No applications found", success: false });
@@ -226,22 +226,22 @@ export const recommendEmployees = async (req, res) => {
             if (!applicant.profile.location || !applicant.profile.location.latitude || !applicant.profile.location.longitude) {
                 return false;
             }
-
+            
             const applicantLatitude = applicant.profile.location.latitude;
             const applicantLongitude = applicant.profile.location.longitude;
             const distance = calculateDistance(jobLatitude, jobLongitude, applicantLatitude, applicantLongitude);
-
+            
             return applicant.profile.experience >= job.experienceLevel && distance <= 50;
         });
-
+        
         if (filteredApplicants.length === 0) {
             return res.status(200).json({ message: "No recommended applicants found", success: true, recommendedApplicants: [] });
         }
 
         const sortedApplicants = filteredApplicants
-            .map((application) => {
-                const experience = application.applicant.profile.experience;
-                const age = application.applicant.profile.age;
+        .map((application) => {
+            const experience = application.applicant.profile.experience;
+            const age = application.applicant.profile.age;
                 const distance = calculateDistance(jobLatitude, jobLongitude, application.applicant.profile.location.latitude, application.applicant.profile.location.longitude);
 
                 return {
@@ -256,16 +256,28 @@ export const recommendEmployees = async (req, res) => {
                 }
                 return b.similarityScore - a.similarityScore; // Sort by similarity (descending)
             });
-
-        const recommendedApplicants = sortedApplicants.map((application) => ({
-            fullname: application.applicant.fullname,
-            email: application.applicant.email,
-            phoneNumber: application.applicant.phoneNumber,
-            experience: application.applicant.profile.experience,
-            age: application.applicant.profile.age,
+            
+        const recommendedApplicants = sortedApplicants.map((application) => {
+            const location  = {
+                latitude: application._doc.applicant?.profile?.location?.latitude,
+                longitude: application._doc.applicant?.profile?.location?.latitude,
+            }
+            const profile={
+                location,
+                resume: application._doc.applicant?.profile.resume,
+                resumeOriginalName: application._doc.applicant?.profile.resumeOriginalName,
+            }
+            return ({
+            fullname: application._doc.applicant?.fullname,
+            email: application._doc.applicant?.email,
+            phoneNumber: application._doc.applicant?.phoneNumber,
+            experience: application._doc.applicant?.profile.experience,
+            age: application._doc.applicant?.profile.age,
+            profile,
+            age: application._doc.applicant?.profile.age,
             distance: application.distance.toFixed(2),
-        }));
-
+        })});
+        
         return res.status(200).json({
             message: "Recommended applicants based on experience, proximity, and similarity score.",
             success: true,

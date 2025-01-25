@@ -37,6 +37,11 @@ const Applicants = () => {
             setLoading(true);
             try {
                 const res = await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`, { withCredentials: true });
+
+
+                const resRecommendation = await axios.get(`http://localhost:8000/api/v1/job/jobs/${params.id}/recommendations`, { withCredentials: true });
+                setRecommendedApplicants(resRecommendation?.data?.recommendedApplicants.map(applicant => ({ applicant })));
+
                 if (res.data?.job?.applications && res.data.job.applications.length > 0) {
                     setAllApplicantsState(res.data.job.applications);
                     dispatch(setAllApplicants(res.data.job.applications));
@@ -73,7 +78,6 @@ const Applicants = () => {
                             return distanceA - distanceB;
                         });
 
-                    setRecommendedApplicants(recommended);
                 } else {
                     toast.info('No applicants found for this job.');
                 }
@@ -97,12 +101,12 @@ const Applicants = () => {
                 <h1 className="font-bold text-xl my-5">
                     All Applicants ({allApplicants.length})
                 </h1>
-                <ApplicantsTable applicants={allApplicants} job={jobDetails} />
+                <ApplicantsTable isApplicant={true} applicants={allApplicants} job={jobDetails} />
 
                 <h1 className="font-bold text-xl my-5">
                     Recommended Applicants ({recommendedApplicants.length})
                 </h1>
-                <ApplicantsTable applicants={recommendedApplicants} job={jobDetails} />
+                <ApplicantsTable applicants={recommendedApplicants} job={jobDetails} isRecommended={true}/>
             </div>
         </div>
     );
