@@ -4,11 +4,10 @@ import jwt from "jsonwebtoken";
 import { Services } from "../models/services.model.js";
 import { User } from "../models/user.model.js";
 import { Application } from "../models/application.model.js";
-
-const adminEmail = "admin@admin.com";
-const adminPassword = "sarathi123";
-
 // Admin login
+
+const adminEmail = 'admin@admin.com';
+const adminPassword = 'sarathi123';
 export const adminlogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -29,7 +28,7 @@ export const adminlogin = async (req, res) => {
       sameSite: "strict",
     });
 
-    res.status(200).json({ message: `Welcome back, Admin`, success: true });
+    res.status(200).json({ message: "Welcome back, Admin", success: true });
   } catch (error) {
     console.error("Error in adminlogin:", error);
     res.status(500).json({ message: "Server error.", success: false });
