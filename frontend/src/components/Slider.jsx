@@ -23,25 +23,25 @@ const employees = [
     name: "Emma",
     age: 25,
     job: "Maid",
-    image: "/women1.jpg",
+    image: "/2.jpg",
   },
   {
     name: "Liam",
     age: 35,
-    job: "Nurseh",
-    image: "/women2.jpg",
+    job: "Nurse",
+    image: "/3.jpg",
   },
   {
-    name: "Emma",
+    name: "Sita Thapa",
     age: 25,
     job: "Maid",
-    image: "/women1.jpg",
+    image: "/8.jpg",
   },
   {
-    name: "Liam",
+    name: "Rukmaya Shrestha",
     age: 35,
     job: "Maid",
-    image: "/women2.jpg",
+    image: "/rukmaya.jpg",
   },
   {
     name: "Emma",
@@ -50,10 +50,10 @@ const employees = [
     image: "/women1.jpg",
   },
   {
-    name: "Liam",
+    name: "Sima Poudel",
     age: 35,
     job: "Caretaker",
-    image: "/women2.jpg",
+    image: "/sima.jpg",
   },
 ];
 

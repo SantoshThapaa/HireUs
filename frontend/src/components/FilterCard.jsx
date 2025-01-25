@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 const FilterCard = ({ setFilterJobs, jobs }) => {
   const [filters, setFilters] = useState({
-    location: "",
+    // location: "",
     jobType: "",
     salary: "",
   });
@@ -32,11 +32,11 @@ const FilterCard = ({ setFilterJobs, jobs }) => {
   useEffect(() => {
     let filteredJobs = jobs;
 
-    if (filters.location) {
-      filteredJobs = filteredJobs.filter((job) =>
-        job.location.toLowerCase().includes(filters.location.toLowerCase())
-      );
-    }
+    // if (filters.location) {
+    //   filteredJobs = filteredJobs.filter((job) =>
+    //     job.location.toLowerCase().includes(filters.location.toLowerCase())
+    //   );
+    // }
 
     if (filters.jobType) {
       filteredJobs = filteredJobs.filter((job) =>
@@ -62,7 +62,7 @@ const FilterCard = ({ setFilterJobs, jobs }) => {
       <hr className="my-3" />
 
       {/* Location Filter */}
-      <RadioGroup
+      {/* <RadioGroup
         value={filters.location}
         onValueChange={(value) => changeHandler("location", value)}
       >
@@ -83,7 +83,7 @@ const FilterCard = ({ setFilterJobs, jobs }) => {
             )
           )}
         </div>
-      </RadioGroup>
+      </RadioGroup> */}
 
       {/* Job Type Filter */}
       <RadioGroup
