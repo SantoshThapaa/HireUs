@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer as LineResponsiveContainer } from "recharts";
+import { motion } from "framer-motion";  // Import Framer Motion for animations
+
 import AdminNavbar from "./AdminNavbar";
 import { ADMIN_API_END_POINT } from "@/utils/constant";
 
@@ -40,13 +41,7 @@ const Stats = () => {
         return <div>{error}</div>;
     }
 
-    const { applicants, users } = statsData;
-
-    // Prepare line chart data
-    const lineChartData = (users || []).map((user) => ({
-        name: user.date, // Ensure users have 'date' field
-        count: user.count, // Ensure users have 'count' field
-    }));
+    const { applicants } = statsData;
 
     // Prepare pie chart data
     const pieData = [
@@ -59,49 +54,52 @@ const Stats = () => {
         <div className="flex">
             <AdminNavbar />
             <div className="min-h-screen bg-white flex flex-col p-8 gap-8">
-                <h1 className="text-2xl font-semibold text-gray-800 mb-6">Admin Stats</h1>
+                
 
                 {/* Applicants Pie Chart */}
-                <div className="mb-8">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Applicants Status</h3>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <PieChart>
-                            <Pie
-                                data={pieData}
-                                dataKey="value"
-                                nameKey="name"
-                                outerRadius={120}
-                                fill="#8884d8"
-                                animationDuration={1500} // Add animation
-                                animationEasing="ease-in-out"
-                            >
-                                <Cell name="Pending" fill="#ff7300" />
-                                <Cell name="Selected" fill="#00c49f" />
-                                <Cell name="Rejected" fill="#ff0000" />
-                            </Pie>
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
+                <div className="flex gap-8">
+                    <div className="mb-8 flex-1">
+                        <h3 className="text-xl font-semibold text-gray-800 m-10">Applicants Status</h3>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie
+                                    data={pieData}
+                                    dataKey="value"
+                                    nameKey="name"
+                                    outerRadius={120}
+                                    fill="#8884d8"
+                                    animationDuration={1500} // Add animation
+                                    animationEasing="ease-in-out"
+                                >
+                                    <Cell name="Pending" fill="#ff7300" />
+                                    <Cell name="Selected" fill="#00c49f" />
+                                    <Cell name="Rejected" fill="#ff0000" />
+                                </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
 
-                {/* Users Registration Line Chart */}
-                <div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">User Registration Over Time</h3>
-                    <LineResponsiveContainer width="100%" height={300}>
-                        <LineChart data={lineChartData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line
-                                type="monotone"
-                                dataKey="count"
-                                stroke="#8884d8"
-                                animationDuration={1500} // Add animation
-                                animationEasing="ease-in-out"
-                            />
-                        </LineChart>
-                    </LineResponsiveContainer>
+                    {/* Color Legend */}
+                    <motion.div
+                        className="flex flex-col justify-center items-start"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <h4 className="text-lg font-semibold text-gray-800 mb-4">Legend</h4>
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6" style={{ backgroundColor: "#ff7300" }}></div>
+                            <span className="text-gray-800">Pending</span>
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6" style={{ backgroundColor: "#00c49f" }}></div>
+                            <span className="text-gray-800">Selected</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-6 h-6" style={{ backgroundColor: "#ff0000" }}></div>
+                            <span className="text-gray-800">Rejected</span>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </div>

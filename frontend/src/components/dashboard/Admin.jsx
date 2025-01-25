@@ -43,7 +43,7 @@ const AdminDashboard = () => {
         <div className="flex">
             <AdminNavbar />
             <div className="min-h-screen bg-white flex">
-                <main className="flex-grow bg-gray-50 p-8">
+                <main className="flex-grow p-8">
                     <h1 className="text-2xl font-semibold text-gray-800 mb-6">Admin Dashboard</h1>
 
                     {/* Summary section */}
