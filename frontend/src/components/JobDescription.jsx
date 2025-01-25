@@ -17,7 +17,11 @@ const JobDescription = () => {
   const jobId = params.id;
   const dispatch = useDispatch();
 
+  const getLocation = (location, key) => location?.[key] || "Not Available";
+
   useEffect(() => {
+    if (!user?._id) return; // Prevent fetching job if user is not available
+
     const fetchSingleJob = async () => {
       try {
         const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
@@ -26,24 +30,34 @@ const JobDescription = () => {
         if (res.data.success) {
           dispatch(setSingleJob(res.data.job));
           setIsApplied(
-            res.data.job.applications.some(
+            res.data.job.applications?.some(
               (application) => application.applicant === user?._id
             )
           );
+        } else {
+          toast.error("Failed to fetch job details.");
         }
       } catch (error) {
-        console.log(error);
-        toast.error("Failed to fetch job details.");
+        console.error(error);
+        toast.error("Error while fetching job details.");
       }
     };
+
     fetchSingleJob();
   }, [jobId, dispatch, user?._id]);
 
   const applyJobHandler = async () => {
+    if (!user?._id) {
+      toast.error("You need to be logged in to apply.");
+      return;
+    }
+
     try {
-      const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${APPLICATION_API_END_POINT}/apply`,
+        { jobId },
+        { withCredentials: true }
+      );
       if (res.data.success) {
         setIsApplied(true);
         const updatedSingleJob = {
@@ -57,10 +71,14 @@ const JobDescription = () => {
         toast.success("You have successfully applied for the job.");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Failed to apply for the job.");
     }
   };
+
+  if (!singleJob) {
+    return <div>Loading job details...</div>;
+  }
 
   return (
     <div className="max-w-7xl mx-auto my-10">
@@ -80,13 +98,12 @@ const JobDescription = () => {
           </div>
         </div>
         <Button
-          onClick={isApplied ? null : applyJobHandler}
+          onClick={applyJobHandler}
           disabled={isApplied}
-          className={`rounded-lg ${
-            isApplied
+          className={`rounded-lg ${isApplied
               ? "bg-gray-600 cursor-not-allowed"
               : "bg-[#669588] hover:bg-[#467f70]"
-          }`}
+            }`}
         >
           {isApplied ? "Already Applied" : "Apply Now"}
         </Button>
@@ -96,46 +113,31 @@ const JobDescription = () => {
       </h1>
       <div className="my-4">
         <h1 className="font-bold my-1">
-          Role:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.title}
-          </span>
+          Role: <span className="pl-4 font-normal text-gray-800">{singleJob?.title || "Not Available"}</span>
         </h1>
         <h1 className="font-bold my-1">
-          Location:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.location}
-          </span>
+          Location: <span className="pl-4 font-normal text-gray-800">{getLocation(singleJob?.location, "address")}</span>
         </h1>
         <h1 className="font-bold my-1">
-          Description:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.description}
-          </span>
+          Latitude: <span className="pl-4 font-normal text-gray-800">{getLocation(singleJob?.location, "latitude")}</span>
         </h1>
         <h1 className="font-bold my-1">
-          Experience:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.experience} yrs
-          </span>
+          Longitude: <span className="pl-4 font-normal text-gray-800">{getLocation(singleJob?.location, "longitude")}</span>
         </h1>
         <h1 className="font-bold my-1">
-          Salary:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            NRs.{singleJob?.salary}
-          </span>
+          Requirements: <span className="pl-4 font-normal text-gray-800">{singleJob?.requirements?.join(", ") || "No Requirements Provided"}</span>
         </h1>
         <h1 className="font-bold my-1">
-          Total Applicants:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.applications?.length}
-          </span>
+          Experience: <span className="pl-4 font-normal text-gray-800">{singleJob?.experienceLevel} yrs</span>
         </h1>
         <h1 className="font-bold my-1">
-          Posted Date:{" "}
-          <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.createdAt?.split("T")[0]}
-          </span>
+          Salary: <span className="pl-4 font-normal text-gray-800">NRs.{singleJob?.salary}</span>
+        </h1>
+        <h1 className="font-bold my-1">
+          Total Applicants: <span className="pl-4 font-normal text-gray-800">{singleJob?.applications?.length || "0"}</span>
+        </h1>
+        <h1 className="font-bold my-1">
+          Posted Date: <span className="pl-4 font-normal text-gray-800">{singleJob?.createdAt?.split("T")[0] || "Not Available"}</span>
         </h1>
       </div>
     </div>

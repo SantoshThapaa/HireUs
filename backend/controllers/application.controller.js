@@ -96,7 +96,7 @@ export const getAppliedJobs = async (req, res) => {
     }
 }
 //Admin will see how much has applied for job
-// admin will see how much has applied for the job
+
 export const getApplicants = async (req, res) => {
     try {
         const jobId = req.params.id;

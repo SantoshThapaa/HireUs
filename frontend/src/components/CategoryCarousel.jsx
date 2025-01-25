@@ -1,4 +1,3 @@
-// import React from 'react';
 import { useDispatch } from "react-redux";
 import { Button } from "./ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
@@ -10,12 +9,13 @@ const CategoryCarousel = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const searchJobHandler = (query) => {
-        dispatch(setSearchedQuery(query));
-        navigate("/browse");
-    }
 
-    // Map your category keys with i18n translation keys
+    const searchJobHandler = (category) => {
+        console.log("Selected Category: ", category);  // Debug log
+        dispatch(setSearchedQuery(category));  // Dispatch the selected category to Redux
+        navigate("/browse");  // Navigate to the Browse page
+    };
+
     const categories = [
         "clinicalNurseSpecialist",
         "cardiacNurse",
@@ -36,7 +36,9 @@ const CategoryCarousel = () => {
                     {
                         categories.map((categoryKey, index) => (
                             <CarouselItem key={index} className="md:basis-1/2 lg-basis-1/3">
-                                <Button onClick={()=>searchJobHandler(categoryKey)} variant="outline">{t(`categories.${categoryKey}`)}</Button>
+                                <Button onClick={() => searchJobHandler(categoryKey)} variant="outline">
+                                    {t(`categories.${categoryKey}`)}
+                                </Button>
                             </CarouselItem>
                         ))
                     }

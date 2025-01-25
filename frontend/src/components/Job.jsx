@@ -13,35 +13,42 @@ const Job = ({ job = {} }) => {
 
     // Check local storage on component mount
     useEffect(() => {
-        const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-        setIsSaved(savedJobs.includes(job._id));
-        const bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarkedJobs")) || [];
-        setIsBookmarked(bookmarkedJobs.includes(job._id));
+        if (job._id) {
+            const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+            setIsSaved(savedJobs.includes(job._id));
+
+            const bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarkedJobs")) || [];
+            setIsBookmarked(bookmarkedJobs.includes(job._id));
+        }
     }, [job._id]);
 
     const handleSaveForLater = () => {
-        const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-        if (savedJobs.includes(job._id)) {
-            const updatedJobs = savedJobs.filter((id) => id !== job._id);
-            localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
-            setIsSaved(false);
-        } else {
-            savedJobs.push(job._id);
-            localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
-            setIsSaved(true);
+        if (job._id) {
+            const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+            if (savedJobs.includes(job._id)) {
+                const updatedJobs = savedJobs.filter((id) => id !== job._id);
+                localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
+                setIsSaved(false);
+            } else {
+                savedJobs.push(job._id);
+                localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+                setIsSaved(true);
+            }
         }
     };
 
     const handleBookmark = () => {
-        const bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarkedJobs")) || [];
-        if (bookmarkedJobs.includes(job._id)) {
-            const updatedJobs = bookmarkedJobs.filter((id) => id !== job._id);
-            localStorage.setItem("bookmarkedJobs", JSON.stringify(updatedJobs));
-            setIsBookmarked(false);
-        } else {
-            bookmarkedJobs.push(job._id);
-            localStorage.setItem("bookmarkedJobs", JSON.stringify(bookmarkedJobs));
-            setIsBookmarked(true);
+        if (job._id) {
+            const bookmarkedJobs = JSON.parse(localStorage.getItem("bookmarkedJobs")) || [];
+            if (bookmarkedJobs.includes(job._id)) {
+                const updatedJobs = bookmarkedJobs.filter((id) => id !== job._id);
+                localStorage.setItem("bookmarkedJobs", JSON.stringify(updatedJobs));
+                setIsBookmarked(false);
+            } else {
+                bookmarkedJobs.push(job._id);
+                localStorage.setItem("bookmarkedJobs", JSON.stringify(bookmarkedJobs));
+                setIsBookmarked(true);
+            }
         }
     };
 
@@ -56,9 +63,11 @@ const Job = ({ job = {} }) => {
         <div className="p-5 rounded-md shadow-xl bg-white border border-gray-200">
             <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-400">
-                    {daysAgoFunction(job?.createdAt) === 0
-                        ? "Today"
-                        : `${daysAgoFunction(job?.createdAt)} days ago`}
+                    {job?.createdAt
+                        ? daysAgoFunction(job.createdAt) === 0
+                            ? "Today"
+                            : `${daysAgoFunction(job.createdAt)} days ago`
+                        : "N/A"}
                 </p>
                 <Button
                     variant="outline"
@@ -72,12 +81,12 @@ const Job = ({ job = {} }) => {
             <div className="flex items-center gap-2 my-2">
                 <Button className="p-6" variant="outline" size="icon">
                     <Avatar>
-                        <AvatarImage src={job?.services?.logo} alt={`${job?.services?.name} logo`} />
+                        <AvatarImage src={job?.services?.logo || "/default-logo.png"} alt={`${job?.services?.name || "Unknown Service"} logo`} />
                     </Avatar>
                 </Button>
                 <div>
                     <h1 className="font-medium text-lg">{job?.services?.name || "Unknown Service"}</h1>
-                    <p className="text-sm text-gray-400">Nepal</p>
+                    <p className="text-sm text-gray-400">{job?.location?.address || "Nepal"}</p>
                 </div>
             </div>
             <div>
@@ -121,6 +130,9 @@ Job.propTypes = {
         position: PropTypes.number,
         jobType: PropTypes.string,
         salary: PropTypes.number,
+        location: PropTypes.shape({
+            address: PropTypes.string,
+        }),
         createdAt: PropTypes.string,
         _id: PropTypes.string,
     }).isRequired,

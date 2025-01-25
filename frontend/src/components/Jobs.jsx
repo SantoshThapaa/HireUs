@@ -19,14 +19,15 @@ const Jobs = () => {
             <Navbar />
             <div className="max-w-7xl mx-auto mt-5">
                 <div className="flex gap-5">
-                    <div className="w-30%">
+                    {/* Use proper Tailwind class for width */}
+                    <div className="w-[20%]">
                         {/* Pass setFilterJobs as a prop */}
                         <FilterCard setFilterJobs={setFilterJobs} />
                     </div>
 
                     {/* Job Cards */}
-                    {filterJobs.length <= 0 ? (
-                        <span>Job not found</span>
+                    {filterJobs.length === 0 ? (
+                        <span>No jobs found</span>
                     ) : (
                         <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
                             <div className="grid grid-cols-3 gap-4">

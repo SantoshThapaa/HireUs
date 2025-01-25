@@ -2,64 +2,125 @@ import { Job } from "../models/job.model.js";
 
 export const postJob = async (req, res) => {
     try {
-        const {title, description, requirements, salary, location, jobType, experience, position, servicesId}= req.body;
+        const { 
+            title, 
+            description, 
+            requirements, 
+            salary, 
+            location, 
+            latitude, 
+            longitude, 
+            jobType, 
+            experience, 
+            position, 
+            servicesId 
+        } = req.body;
         const userId = req.id;
 
-        if(!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !servicesId){
+        // Validate required fields
+        if (
+            !title || 
+            !description || 
+            !requirements || 
+            !salary || 
+            !location || 
+            !latitude || 
+            !longitude || 
+            !jobType || 
+            !experience || 
+            !position || 
+            !servicesId
+        ) {
             return res.status(400).json({
                 message: "Please fill in all fields",
-                success:false
-            })
-        };
+                success: false,
+            });
+        }
+
+        // Log the incoming request data for debugging
+        console.log("Job Data: ", {
+            title, description, requirements, salary, location, latitude, longitude, jobType, experience, position, servicesId
+        });
+
+        // Create a new job
         const job = await Job.create({
             title,
-            description, 
-            requirements: requirements.split(","), 
-            salary: Number(salary), 
-            location, 
-            jobType, 
-            experienceLevel: experience, 
-            position, 
+            description,
+            requirements: requirements.split(","), // Split requirements into an array
+            salary: Number(salary),
+            location: {
+                address: location,
+                latitude: parseFloat(latitude), // Ensure latitude is a number
+                longitude: parseFloat(longitude), // Ensure longitude is a number
+            },
+            jobType,
+            experienceLevel: experience,
+            position,
             services: servicesId,
-            created_by: userId
+            created_by: userId,
         });
+
+        // Log job creation
+        console.log("Job Created:", job);
+
         return res.status(201).json({
             message: "Job posted successfully",
             job,
-            success:true,
-        })
-    }catch(error){
-        console.log(error);
+            success: true,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "An error occurred while posting the job",
+            success: false,
+            error: error.message,
+        });
     }
-}
+};
+
+
 
 //worker
+// worker - Get all jobs
 export const getAllJobs = async (req, res) => {
     try {
-        const keyword = req.query.keyword || "";
+        const keyword = req.query.keyword || ""; // Allow search by keyword
         const query = {
             $or: [
-                { title: { $regex: keyword, $options: "i"} },//small corrector or large it is sensitive
-                { description: { $regex: keyword, $options: "i"}},
+                { title: { $regex: keyword, $options: "i" } },
+                { description: { $regex: keyword, $options: "i" } },
             ]
         };
-        const jobs = await Job.find(query).populate({
-            path: "services",
-        }).sort({createdAt: -1 });
-        if(!jobs){
+
+        const jobs = await Job.find(query)
+            .populate({
+                path: "services",
+                select: "name description" // Populate service info as needed
+            })
+            .sort({ createdAt: -1 }); // Sort jobs by creation date
+
+        if (!jobs.length) {
             return res.status(404).json({
                 message: "No jobs found",
-                success:false
-            })
-        };
+                success: false,
+            });
+        }
+
         return res.status(200).json({
             jobs,
-            success:true
+            success: true,
         });
-    } catch(error){
-        console.log(error);
+    } catch (error) {
+        console.error("Error fetching jobs:", error);
+        return res.status(500).json({
+            message: "An error occurred while fetching jobs",
+            success: false,
+            error: error.message,
+        });
     }
-}
+};
+
+
 // Bookmark Job - Adds the job to the user's bookmarked list
 export const bookmarkJob = async (req, res) => {
     try {
@@ -156,26 +217,34 @@ export const saveJobForLater = async (req, res) => {
     }
 };
 //worker
+// worker - Get job by ID
 export const getJobById = async (req, res) => {
     try {
         const jobId = req.params.id;
-        const job = await Job.findById(jobId).populate({
-            path: "applications"
-        });
-        if(!job){
+        const job = await Job.findById(jobId).populate("applications"); // Populate applications to see applicants
+
+        if (!job) {
             return res.status(404).json({
-                message: "No jobs found",
-                success:false
-            })
-        };
+                message: "Job not found",
+                success: false,
+            });
+        }
+
         return res.status(200).json({
             job,
-            success:true
+            success: true,
         });
-    }catch(error){
-        console.error(error);
+    } catch (error) {
+        console.error("Error fetching job by ID:", error);
+        return res.status(500).json({
+            message: "An error occurred while fetching the job",
+            success: false,
+            error: error.message,
+        });
     }
-}
+};
+
+ 
 //admin created job for
 export const getAdminJobs = async (req, res) => {
     try {

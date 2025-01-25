@@ -45,7 +45,14 @@ const userSchema = new mongoose.Schema({
             default: 18,
         },
         location: {
-            type: String,
+            latitude: {
+                type: Number,
+                required: false,
+            },
+            longitude: {
+                type: Number,
+                required: false,
+            },
         },
         resume: {
             type: String,
@@ -58,21 +65,21 @@ const userSchema = new mongoose.Schema({
         },
         experience: {
             type: Number,
-            default: 0, // Ensure this is set to a number
+            default: 0,
         },
         skills: [String],
         bookmarkedJobs: [
             {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "Job", // Reference to the Job model
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Job", // Reference to the Job model
             },
-          ],
-          savedJobs: [
+        ],
+        savedJobs: [
             {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "Job", // Reference to the Job model
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Job", // Reference to the Job model
             },
-          ],
+        ],
     },
 }, { timestamps: true });
 

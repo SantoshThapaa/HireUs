@@ -2,98 +2,146 @@ import { Services } from "../models/services.model.js";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
-export const registerServices = async(req, res) => {
-    try { 
-        const { servicesName } = req.body;
-        if(!servicesName){
-            return res.status(400).json({
-                message: 'Services name are required',
-                success:false
-            });
-        }
-        let services = await Services.findOne({name: servicesName});
-        if(services){
-            return res.status(400).json({
-                message:"You can't register same services",
-                success:false
-            })
-        };
-        services = await Services.create({
-            name: servicesName,
-            userId: req.id
-        });
-
-        return res.status(201).json({
-            message:"Services registered successfully.",
-            services,
-            success:true
-        })
-    }catch(error){
-        console.log(error);
+export const registerServices = async (req, res) => {
+  try {
+    const { servicesName } = req.body;
+    if (!servicesName) {
+      return res.status(400).json({
+        message: "Service name is required",
+        success: false,
+      });
     }
-}
-export const getServices = async(req, res) =>{
-    try {
-        const userId = req.id; //logged in userId
-        const services = await Services.find({userId});
-        if(!services) {
-            return res.status(404).json({
-                message: 'No services found',
-                success: false
-            })
-        }
-        return res.status(200).json({
-            services,
-            success: true
-        })
-    } catch(error){
-        console.log(error);
+
+    let services = await Services.findOne({ name: servicesName });
+    if (services) {
+      return res.status(400).json({
+        message: "You can't register the same service",
+        success: false,
+      });
     }
-}
-// get company by id
-export const getServicesById = async(req, res) =>{
-    try {
-        const servicesId = req.params.id;
-        const services = await Services.findById(servicesId);
-        if(!services) {
-            return res.status(404).json({
-                message: 'No services found',
-                success: false
-            })
-        }
-        return res.status(200).json({
-            services,
-            success:true
-        })
-    }catch(error){
-        console.log(error);
+
+    services = await Services.create({
+      name: servicesName,
+      userId: req.id,
+    });
+
+    return res.status(201).json({
+      message: "Service registered successfully.",
+      services,
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "An error occurred while registering the service",
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const getServices = async (req, res) => {
+  try {
+    const userId = req.id; // Logged-in userId
+    const services = await Services.find({ userId });
+    if (!services.length) {
+      return res.status(404).json({
+        message: "No services found",
+        success: false,
+      });
     }
-}
+    return res.status(200).json({
+      services,
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "An error occurred while fetching services",
+      success: false,
+      error: error.message,
+    });
+  }
+};
 
-export const updateServices = async (req, res) =>{
-    try{
-        const { name, description, website,location } = req.body;
-        const file = req.file;
-        //cloudinary
-        const fileUri =getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        const logo = cloudResponse.secure_url;
-
-        const updateData = { name, description, website, location, logo };
-
-        const services = await Services.findByIdAndUpdate(req.params.id, updateData, {new: true});
-
-        if(!services){
-            return  res.status(404).json({
-                message: 'No services found',
-                success: false
-            })
-        }
-        return res.status(200).json({
-            message: 'Services updated successfully',
-            success: true
-        })
-    }catch(error){
-        console.log(error);
+export const getServicesById = async (req, res) => {
+  try {
+    const servicesId = req.params.id;
+    const services = await Services.findById(servicesId);
+    if (!services) {
+      return res.status(404).json({
+        message: "No services found",
+        success: false,
+      });
     }
-}
+    return res.status(200).json({
+      services,
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "An error occurred while fetching the service",
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+export const updateServices = async (req, res) => {
+  try {
+    const { name, description, website, location, latitude, longitude } = req.body;
+    const file = req.file;
+
+    if (!name || !location) {
+      return res.status(400).json({
+        message: "Name and location are required",
+        success: false,
+      });
+    }
+
+    let logo;
+    if (file) {
+      // Cloudinary upload
+      const fileUri = getDataUri(file);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+      logo = cloudResponse.secure_url;
+    }
+
+    const updateData = {
+      name,
+      description,
+      website,
+      location: {
+        address: location, // Location as address (optional)
+        latitude: latitude ? parseFloat(latitude) : undefined,
+        longitude: longitude ? parseFloat(longitude) : undefined,
+      },
+    };
+
+    if (logo) {
+      updateData.logo = logo;
+    }
+
+    const services = await Services.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!services) {
+      return res.status(404).json({
+        message: "Service not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Service updated successfully",
+      success: true,
+      data: services,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "An error occurred while updating the service",
+      success: false,
+      error: error.message,
+    });
+  }
+};
