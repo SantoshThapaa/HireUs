@@ -1,74 +1,98 @@
 import { useDispatch, useSelector } from "react-redux";
 import Job from "./Job";
 import Navbar from "./shared/Navbar";
-import PropTypes from "prop-types";
-import useGetAllJobs from "@/hooks/useGetAllJobs";
-import { setSearchedQuery } from "@/redux/jobSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import axios from "axios";
+import { JOB_API_END_POINT } from "@/utils/constant";
+import { setAllJobs, setSearchedQuery } from "@/redux/jobSlice";
 
 const Browse = () => {
-    useGetAllJobs();  // Custom hook to fetch all jobs
-    const { allJobs, searchedQuery } = useSelector((store) => store.job);  // Access all jobs and search query
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { allJobs, searchedQuery } = useSelector((store) => store.job);
+  const [filterJobs, setFilterJobs] = useState(allJobs);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    // Clear the searched query when the component is unmounted
-    useEffect(() => {
-        return () => {
-            dispatch(setSearchedQuery(""));
-        };
-    }, [dispatch]);
+  // Fetch all jobs from the API
+  useEffect(() => {
+    const fetchAllJobs = async () => {
+      try {
+        const res = await axios.get(`${JOB_API_END_POINT}/get`, {
+          withCredentials: true,
+        });
+        if (res.data) {
+          dispatch(setAllJobs(res.data.jobs));
+        } else {
+          setError("Failed to fetch jobs: No data returned");
+        }
+      } catch (error) {
+        setError(error.message || "An error occurred while fetching jobs");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllJobs();
+  }, [dispatch]);
 
-    // Debug log for searchedQuery and allJobs
-    console.log("Searched Query:", searchedQuery);
-    console.log("All Jobs:", allJobs);
-
-    // Filter jobs based on the selected category
-    const filteredJobs = searchedQuery
-        ? allJobs.filter((job) =>
-            job.services && job.services.name && job.services.name.toLowerCase() === searchedQuery.toLowerCase()
+  // Update filterJobs whenever allJobs or searchedQuery changes
+  useEffect(() => {
+    const filtered = searchedQuery
+      ? allJobs.filter((job) =>
+          job.services?.name.toLowerCase().includes(searchedQuery.toLowerCase())
         )
-        : allJobs;  // If no category is selected, show all jobs
+      : allJobs;
+    setFilterJobs(filtered);
+  }, [allJobs, searchedQuery]);
 
-    // Debug log for filtered jobs
-    console.log("Filtered Jobs: ", filteredJobs);
+  // Clear the searched query when the component is unmounted
+  useEffect(() => {
+    return () => {
+      dispatch(setSearchedQuery(""));
+    };
+  }, [dispatch]);
 
-    return (
-        <div>
-            <Navbar />
-            <div className="max-w-7xl mx-auto my-10">
-                <h1 className="font-bold text-xl my-10">
-                    Search Results ({filteredJobs?.length || 0})
-                </h1>
-                {/* Show a message if no jobs are found */}
-                {filteredJobs?.length === 0 ? (
-                    <p>No jobs found for this category.</p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {/* Display filtered jobs */}
-                        {filteredJobs.map((job) => (
-                            <Job key={job._id} job={job} />
-                        ))}
-                    </div>
-                )}
-            </div>
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <div>
+      <Navbar />
+      <div className="max-w-7xl mx-auto mt-5">
+        <div className="flex gap-5">
+          {/* Job Cards Section */}
+          <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
+            <h1 className="font-bold text-xl my-10">
+              Search Results ({filterJobs.length || 0})
+            </h1>
+
+            {filterJobs.length === 0 ? (
+              <p>No jobs found for this category.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {filterJobs.map((job) => (
+                  <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                    key={job._id}
+                  >
+                    <Job job={job} />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-    );
-};
-
-// Add PropTypes validation for the Job component
-Job.propTypes = {
-    job: PropTypes.shape({
-        services: PropTypes.shape({
-            name: PropTypes.string,
-        }),
-        title: PropTypes.string,
-        description: PropTypes.string,
-        position: PropTypes.number,
-        jobType: PropTypes.string,
-        salary: PropTypes.number,
-        createdAt: PropTypes.string,
-        _id: PropTypes.string,
-    }).isRequired,
+      </div>
+    </div>
+  );
 };
 
 export default Browse;

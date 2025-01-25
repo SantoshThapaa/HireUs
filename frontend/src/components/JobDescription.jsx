@@ -9,13 +9,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
 const JobDescription = () => {
-  const { singleJob } = useSelector((store) => store.job);
-  const { user } = useSelector((store) => store.auth);
+  const {singleJob} = useSelector(store => store.job);
+    const {user} = useSelector(store=>store.auth);
+    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const [isApplied, setIsApplied] = useState(isIntiallyApplied);
 
-  const [isApplied, setIsApplied] = useState(false);
-  const params = useParams();
-  const jobId = params.id;
-  const dispatch = useDispatch();
+    const params = useParams();
+    const jobId = params.id;
+    const dispatch = useDispatch();
+
 
   const getLocation = (location, key) => location?.[key] || "Not Available";
 
@@ -47,34 +49,22 @@ const JobDescription = () => {
   }, [jobId, dispatch, user?._id]);
 
   const applyJobHandler = async () => {
-    if (!user?._id) {
-      toast.error("You need to be logged in to apply.");
-      return;
-    }
-
     try {
-      const res = await axios.post(
-        `${APPLICATION_API_END_POINT}/apply`,
-        { jobId },
-        { withCredentials: true }
-      );
-      if (res.data.success) {
-        setIsApplied(true);
-        const updatedSingleJob = {
-          ...singleJob,
-          applications: [
-            ...singleJob.applications,
-            { applicant: user?._id },
-          ],
-        };
-        dispatch(setSingleJob(updatedSingleJob));
-        toast.success("You have successfully applied for the job.");
-      }
+        const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
+        
+        if(res.data.success){
+            setIsApplied(true); // Update the local state
+            const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?._id}]}
+            dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
+            toast.success(res.data.message);
+
+        }
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to apply for the job.");
+        console.log(error);
+        toast.error(error.response.data.message);
     }
-  };
+}
+
 
   if (!singleJob) {
     return <div>Loading job details...</div>;
@@ -93,7 +83,7 @@ const JobDescription = () => {
               {singleJob?.jobType}
             </Badge>
             <Badge className="text-[#5fa794] font-bold" variant="ghost">
-              NRs.{singleJob?.salary}k
+              NRs.{singleJob?.salary}
             </Badge>
           </div>
         </div>
