@@ -55,7 +55,7 @@ const Jobs = () => {
       <div className="max-w-7xl mx-auto mt-5">
         <div className="flex gap-5">
           {/* Filter Section */}
-          <div className="w-[20%]">
+          <div className="w-[14%]">
             <FilterCard setFilterJobs={setFilterJobs} jobs={data} />
           </div>
 

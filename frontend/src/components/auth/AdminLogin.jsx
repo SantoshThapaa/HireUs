@@ -44,7 +44,7 @@ const AdminLogin = () => {
         </div>
         <button 
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded mt-4"
+          className="w-full bg-[#45cfc1] text-white py-2 rounded mt-4"
         >
           Login
         </button>

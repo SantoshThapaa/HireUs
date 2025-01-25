@@ -199,6 +199,20 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
                                 className="col-span-3"
                             />
                         </div>
+                        {/* Skills */}
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="skills" className="text-right">
+                                Skills
+                            </Label>
+                            <Input
+                                id="skills"
+                                name="skills"
+                                type="text"
+                                value={input.skills}
+                                onChange={changeEventHandler}
+                                className="col-span-3"
+                            />
+                        </div>
                         {/* Experience */}
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="experience" className="text-right">

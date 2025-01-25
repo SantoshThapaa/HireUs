@@ -60,31 +60,6 @@ const FilterCard = ({ setFilterJobs, jobs }) => {
     <div className="w-full bg-white p-4 rounded-md">
       <h1 className="font-semibold text-[#45cfc1] text-xl mb-4">Filter Jobs</h1>
       <hr className="my-3" />
-
-      {/* Location Filter */}
-      {/* <RadioGroup
-        value={filters.location}
-        onValueChange={(value) => changeHandler("location", value)}
-      >
-        <h2 className="font-semibold text-sm text-gray-600">Location</h2>
-        <div className="flex flex-col gap-y-3 mt-2">
-          {["Kathmandu", "Lalitpur", "Bhaktapur", "Pokhara", "Chitwan", "Syangja"].map(
-            (location) => (
-              <div key={location} className="flex items-center space-x-1">
-                <RadioGroupItem
-                  value={location}
-                  id={`location-${location}`}
-                  checked={filters.location === location}
-                />
-                <Label htmlFor={`location-${location}`} className="text-sm">
-                  {location}
-                </Label>
-              </div>
-            )
-          )}
-        </div>
-      </RadioGroup> */}
-
       {/* Job Type Filter */}
       <RadioGroup
         value={filters.jobType}
@@ -93,13 +68,13 @@ const FilterCard = ({ setFilterJobs, jobs }) => {
         <h2 className="font-semibold text-sm text-gray-600 mt-5">Job Type</h2>
         <div className="flex flex-col gap-y-3 mt-2">
           {[
-            "babySitterService",
-            "nurseMidwife",
-            "officeMaidService",
-            "mentalHealthNurse",
-            "oncologyNurse",
-            "houseMaid",
-            "caretaker",
+            "Baby Sitter Service",
+            "Nurse Midwife",
+            "Office Maid Service",
+            "Mental Health Nurse",
+            "Oncology Nurse",
+            "House Maid",
+            "Caretaker",
           ].map((jobType) => (
             <div key={jobType} className="flex items-center space-x-1">
               <RadioGroupItem
