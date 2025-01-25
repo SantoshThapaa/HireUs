@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Edit2, MoreHorizontal, MapPin } from 'lucide-react';
+import { Edit2, MoreHorizontal, } from 'lucide-react';//MapPin 
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { useSelector } from 'react-redux';
-import { Button } from '../ui/button';
-import { toast } from 'sonner';
+// import { Button } from '../ui/button';
+// import { toast } from 'sonner';
 
 const ServicesTable = () => {
     const { services, searchServicesByText } = useSelector((store) => store.service);
     const [filterServices, setFilterServices] = useState([]);
-    const [location, setLocation] = useState({ latitude: '', longitude: '' });
+    // const [location, setLocation] = useState({ latitude: '', longitude: '' });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,25 +25,25 @@ const ServicesTable = () => {
     }, [services, searchServicesByText]);
 
     // Fetch user's location
-    const fetchLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setLocation({
-                        latitude: position.coords.latitude.toFixed(6),
-                        longitude: position.coords.longitude.toFixed(6),
-                    });
-                    toast.success('Location fetched successfully!');
-                },
-                (error) => {
-                    console.error('Error fetching location:', error);
-                    toast.error('Unable to fetch location. Please enter manually.');
-                }
-            );
-        } else {
-            toast.error('Geolocation is not supported by your browser.');
-        }
-    };
+    // const fetchLocation = () => {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(
+    //             (position) => {
+    //                 setLocation({
+    //                     latitude: position.coords.latitude.toFixed(6),
+    //                     longitude: position.coords.longitude.toFixed(6),
+    //                 });
+    //                 toast.success('Location fetched successfully!');
+    //             },
+    //             (error) => {
+    //                 console.error('Error fetching location:', error);
+    //                 toast.error('Unable to fetch location. Please enter manually.');
+    //             }
+    //         );
+    //     } else {
+    //         toast.error('Geolocation is not supported by your browser.');
+    //     }
+    // };
 
     return (
         <div>
@@ -80,7 +80,7 @@ const ServicesTable = () => {
                                             <Edit2 className="w-4" />
                                             <span>Edit</span>
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        {/* <div className="flex flex-col gap-2">
                                             <Button type="button" onClick={fetchLocation} className="w-full">
                                                 <MapPin className="w-4 inline-block mr-2" />
                                                 Fetch Location
@@ -91,7 +91,7 @@ const ServicesTable = () => {
                                                     <p>Longitude: {location.longitude}</p>
                                                 </div>
                                             )}
-                                        </div>
+                                        </div> */}
                                     </PopoverContent>
                                 </Popover>
                             </TableCell>

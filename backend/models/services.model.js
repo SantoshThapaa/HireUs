@@ -9,6 +9,9 @@ const servicesSchema = new mongoose.Schema({
     description: {
         type: String,
     },
+    logo:{
+        type:String ,
+    },
     website: {
         type: String,
     },

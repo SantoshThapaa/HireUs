@@ -90,7 +90,8 @@ export const getServicesById = async (req, res) => {
 
 export const updateServices = async (req, res) => {
   try {
-    const { name, description, website, location, latitude, longitude } = req.body;
+    const { name, description, website, logo, location, latitude, longitude } = req.body;
+    console.log(req.body);
     const file = req.file;
 
     if (!name || !location) {
@@ -99,8 +100,6 @@ export const updateServices = async (req, res) => {
         success: false,
       });
     }
-
-    let logo;
     if (file) {
       // Cloudinary upload
       const fileUri = getDataUri(file);
@@ -110,6 +109,7 @@ export const updateServices = async (req, res) => {
 
     const updateData = {
       name,
+      logo,
       description,
       website,
       location: {

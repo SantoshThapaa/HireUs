@@ -9,6 +9,23 @@ import Payment from "./Payment";
 
 const shortlistingStatus = ["Accepted", "Rejected"];
 
+// Haversine formula to calculate distance between two geographical points
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const toRadians = (degree) => (degree * Math.PI) / 180;
+    const R = 6371; // Earth's radius in kilometers
+
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) *
+            Math.cos(toRadians(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in kilometers
+};
+
 const ApplicantsTable = ({ applicants, job }) => {
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -55,6 +72,21 @@ const ApplicantsTable = ({ applicants, job }) => {
         }
     };
 
+    // Calculate distance and recommend applicants
+    const recommendedApplicants = applicants
+        .map((applicant) => {
+            const applicantLatitude = applicant?.applicant?.profile?.location?.latitude || 0;
+            const applicantLongitude = applicant?.applicant?.profile?.location?.longitude || 0;
+            const jobLatitude = job?.location?.latitude || 0;
+            const jobLongitude = job?.location?.longitude || 0;
+
+            const distance = calculateDistance(jobLatitude, jobLongitude, applicantLatitude, applicantLongitude);
+
+            return { ...applicant, distance };
+        })
+        .sort((a, b) => a.distance - b.distance) // Sort by distance (ascending)
+        .slice(0, job?.position || applicants.length); // Limit to job positions or all applicants
+
     return (
         <div>
             <Table>
@@ -65,13 +97,15 @@ const ApplicantsTable = ({ applicants, job }) => {
                         <TableHead>Email</TableHead>
                         <TableHead>Contact</TableHead>
                         <TableHead>Resume</TableHead>
-                        <TableHead>Date</TableHead>
+                        <TableHead>Latitude</TableHead>
+                        <TableHead>Longitude</TableHead>
+                        <TableHead>Distance (km)</TableHead>
                         <TableHead className="text-right">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {applicants?.length > 0 ? (
-                        applicants.map((item) => (
+                    {recommendedApplicants?.length > 0 ? (
+                        recommendedApplicants.map((item) => (
                             <TableRow key={item._id}>
                                 <TableCell>{item?.applicant?.fullname}</TableCell>
                                 <TableCell>{item?.applicant?.email}</TableCell>
@@ -90,7 +124,9 @@ const ApplicantsTable = ({ applicants, job }) => {
                                         <span>NA</span>
                                     )}
                                 </TableCell>
-                                <TableCell>{item?.createdAt.split("T")[0]}</TableCell>
+                                <TableCell>{item?.applicant?.profile?.location?.latitude || "NA"}</TableCell>
+                                <TableCell>{item?.applicant?.profile?.location?.longitude || "NA"}</TableCell>
+                                <TableCell>{item.distance.toFixed(2)}</TableCell>
                                 <TableCell className="float-right cursor-pointer">
                                     <Popover>
                                         <PopoverTrigger>
@@ -115,7 +151,7 @@ const ApplicantsTable = ({ applicants, job }) => {
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan="6" className="text-center">
+                            <TableCell colSpan="8" className="text-center">
                                 No applicants found
                             </TableCell>
                         </TableRow>
@@ -140,7 +176,13 @@ ApplicantsTable.propTypes = {
     job: PropTypes.shape({
         salary: PropTypes.number,
         jobSalary: PropTypes.number,
-    }), // Made optional
+        position: PropTypes.number,
+        location: PropTypes.shape({
+            latitude: PropTypes.number,
+            longitude: PropTypes.number,
+        }),
+    }), // Added location prop
 };
 
 export default ApplicantsTable;
+
