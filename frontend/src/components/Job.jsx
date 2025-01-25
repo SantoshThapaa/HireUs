@@ -1,6 +1,6 @@
 import { Bookmark } from "lucide-react";
 import { Button } from "./ui/button";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+// import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -79,11 +79,11 @@ const Job = ({ job = {} }) => {
                 </Button>
             </div>
             <div className="flex items-center gap-2 my-2">
-                <Button className="p-6" variant="outline" size="icon">
-                    <Avatar>
-                        <AvatarImage src={job?.services?.logo || "/default-logo.png"} alt={`${job?.services?.name || "Unknown Service"} logo`} />
-                    </Avatar>
-                </Button>
+                {/* <Button className="p-6" variant="outline" size="icon"> */}
+                    {/* <Avatar>
+                        <AvatarImage src="/SARATHI.png" className="object-contain"/>
+                    </Avatar> */}
+                {/* </Button> */}
                 <div>
                     <h1 className="font-medium text-lg">{job?.services?.name || "Unknown Service"}</h1>
                     <p className="text-sm text-gray-400">{job?.location?.address || "Nepal"}</p>

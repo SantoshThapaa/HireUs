@@ -121,11 +121,11 @@ const ServicesSetup = () => {
                             <ArrowLeft className="text-[#45cfc1]" />
                             <span>Back</span>
                         </Button>
-                        <h1 className="font-bold text-xl">Services Setup</h1>
+                        <h1 className="font-bold text-xl">Services/Companies Setup</h1>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label>Services Name</Label>
+                            <Label>Services/Companies Name</Label>
                             <Input
                                 type="text"
                                 name="name"
