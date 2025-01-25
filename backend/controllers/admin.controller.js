@@ -1,13 +1,13 @@
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// import { Admin } from "../models/admin.model.js";
 import { Services } from "../models/services.model.js";
 import { User } from "../models/user.model.js";
 import { Application } from "../models/application.model.js";
-// Admin login
 
+// Admin login
 const adminEmail = 'admin@admin.com';
 const adminPassword = 'sarathi123';
+
 export const adminlogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -16,6 +16,13 @@ export const adminlogin = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required.", success: false });
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format.", success: false });
+    }
+
+    // Check if email and password match
     if (email !== adminEmail || password !== adminPassword) {
       return res.status(400).json({ message: "Invalid email or password.", success: false });
     }
@@ -24,14 +31,14 @@ export const adminlogin = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
       sameSite: "strict",
     });
 
-    res.status(200).json({ message: "Welcome back, Admin", success: true });
+    return res.status(200).json({ message: "Welcome back, Admin", success: true });
   } catch (error) {
     console.error("Error in adminlogin:", error);
-    res.status(500).json({ message: "Server error.", success: false });
+    return res.status(500).json({ message: "Server error.", success: false });
   }
 };
 
@@ -43,30 +50,21 @@ export const adminlogout = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.log("Error in adminlogout:", error);
+    return res.status(500).json({
+      message: "Error during logout",
+      success: false,
+    });
   }
 };
 
 // Fetch admin dashboard data
 export const getAdminDashboardData = async (req, res) => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized. Token missing.", success: false });
-    }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
-    // Check if the admin is authorized
-    if (decoded.userId !== "adminId") {
-      return res.status(403).json({ message: "Forbidden. Access denied.", success: false });
-    }
-
     const workersCount = await User.countDocuments({ role: "worker" });
     const recruitersCount = await User.countDocuments({ role: "recruiter" });
     const allUsers = await User.find({}, "fullname email phoneNumber role createdAt");
-    const allServices = await Services.find({}, "name description website location createdAt");
+    const allServices = await Services.find({}, "name description website createdAt");
 
     const response = {
       summary: {
@@ -95,22 +93,10 @@ export const getAdminDashboardData = async (req, res) => {
   }
 };
 
+
 // Fetch admin dashboard stats
 export const getAdminDashboardStats = async (req, res) => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized. Token missing.", success: false });
-    }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
-    // Check if the admin is authorized
-    if (decoded.userId !== "adminId") {
-      return res.status(403).json({ message: "Forbidden. Access denied.", success: false });
-    }
-
     const applicantStats = await Application.aggregate([
       {
         $group: {
@@ -177,14 +163,7 @@ export const getAdminDashboardStats = async (req, res) => {
 // Fetch admin data
 export const getAdminData = async (req, res) => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized. Token missing.", success: false });
-    }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const adminData = await Admin.findById(decoded.userId).select("-password");
+    const adminData = await Admin.findOne({ email: 'admin@admin.com' }).select("-password");
 
     if (!adminData) {
       return res.status(404).json({ message: "Admin not found.", success: false });
@@ -193,9 +172,6 @@ export const getAdminData = async (req, res) => {
     res.status(200).json({ admin: adminData, success: true });
   } catch (error) {
     console.error("Error in getAdminData:", error);
-    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Unauthorized. Token invalid or expired.", success: false });
-    }
     res.status(500).json({ message: "Server error.", success: false });
   }
 };

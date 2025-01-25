@@ -103,7 +103,6 @@ const ManageServices = () => {
                             <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Description</TableHead>
-                                <TableHead>Location</TableHead>
                                 <TableHead>Website</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -113,7 +112,7 @@ const ManageServices = () => {
                                     <TableRow key={service._id}>
                                         <TableCell>{service.name || "N/A"}</TableCell>
                                         <TableCell>{service.description || "N/A"}</TableCell>
-                                        <TableCell>{service.location || "N/A"}</TableCell>
+                                        {/* <TableCell>{service.location || "N/A"}</TableCell> */}
                                         <TableCell>
                                             {service.website ? (
                                                 <a
