@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
 
-// Use default parameters for `job`
-const LatestJobCards = ({ job = {} }) => { 
+const LatestJobCards = ({ job = {} }) => {
   const navigate = useNavigate();
   return (
     <div
@@ -35,7 +34,6 @@ const LatestJobCards = ({ job = {} }) => {
   );
 };
 
-// Add PropTypes validation
 LatestJobCards.propTypes = {
   job: PropTypes.shape({
     services: PropTypes.shape({
@@ -47,7 +45,7 @@ LatestJobCards.propTypes = {
     jobType: PropTypes.string,
     salary: PropTypes.number,
     _id: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
 
 export default LatestJobCards;

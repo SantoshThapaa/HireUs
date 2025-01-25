@@ -105,7 +105,7 @@ export const getAllJobs = async (req, res) => {
                 success: false,
             });
         }
-
+        console.log("jobs",jobs);
         return res.status(200).json({
             jobs,
             success: true,

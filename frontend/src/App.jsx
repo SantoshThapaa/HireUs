@@ -16,7 +16,7 @@ import PostJob from "./components/admin/PostJob";
 import Applicants from "./components/admin/Applicants";
 import AdminDashboard from "./components/dashboard/AdminDashboard";
 import AdminLogin from "./components/auth/Adminlogin";
-import AdminSignup from "./components/auth/AdminSignup";
+// import AdminSignup from "./components/auth/AdminSignup";
 import Stats from "./components/dashboard/Stats";
 import Admin from "./components/dashboard/Admin";
 import Success from "./components/admin/Success";
@@ -76,10 +76,10 @@ const appRouter = createBrowserRouter([
     path: '/adminlogin',
     element: <AdminLogin />
   },
-  {
-    path: '/adminsignup',
-    element: <AdminSignup />
-  },
+  // {
+  //   path: '/adminsignup',
+  //   element: <AdminSignup />
+  // },
   {
     path: '/dashboard/adminDashboard',
     element: <AdminDashboard />

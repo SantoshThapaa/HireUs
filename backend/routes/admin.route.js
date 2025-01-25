@@ -2,7 +2,7 @@ import express from "express";
 import {
   adminlogin,
   adminlogout,
-  adminregister,
+  // adminregister,
   getAdminDashboardData,
   getAdminDashboardStats,
   getAdminData,
@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // Admin routes
-router.route("/adminregister").post(adminregister); 
+// router.route("/adminregister").post(adminregister); 
 router.route("/adminlogin").post(adminlogin); 
 router.route("/adminlogout").get(adminlogout); 
 router.route("/admindata").get(getAdminData); 
