@@ -166,8 +166,7 @@ ApplicantsTable.propTypes = {
             latitude: PropTypes.number,
             longitude: PropTypes.number,
         }),
-    }), // Added location prop
+    }),
 };
 
 export default ApplicantsTable;
-
