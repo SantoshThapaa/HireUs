@@ -7,7 +7,7 @@ export const registerServices = async (req, res) => {
     const { servicesName } = req.body;
     if (!servicesName) {
       return res.status(400).json({
-        message: "Service name is required",
+        message: "Services name is required",
         success: false,
       });
     }
@@ -26,14 +26,14 @@ export const registerServices = async (req, res) => {
     });
 
     return res.status(201).json({
-      message: "Service registered successfully.",
+      message: "Services registered successfully.",
       services,
       success: true,
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      message: "An error occurred while registering the service",
+      message: "An error occurred while registering the services",
       success: false,
       error: error.message,
     });
