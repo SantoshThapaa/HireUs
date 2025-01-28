@@ -72,7 +72,7 @@ const Navbar = () => {
                 <>
                   <li>
                     <Link to="/admin/services" className="hover:text-[#45cfc1]">
-                      {t('services')}
+                      {t('Services')}
                     </Link>
                   </li>
                   <li>
