@@ -38,8 +38,6 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Generate a verification code (for example, 6 digits)
     const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
     const verificationCodeExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 1 day expiry
 
