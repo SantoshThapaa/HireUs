@@ -25,7 +25,7 @@ export const register = async (req, res) => {
     if (file) {
       const fileUri = getDataUri(file);
       cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
-        resource_type: "auto", // Let Cloudinary auto-detect the file type
+        resource_type: "auto", 
       });
     }
 
