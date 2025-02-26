@@ -1,23 +1,23 @@
 // import React from "react";
 import { useTranslation } from "react-i18next";
-// import { Search } from "lucide-react";
-// import { Button } from "./ui/button";
-// import CategoryCarousel from "./CategoryCarousel";
-// import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// // import { setSearchedQuery } from "@/redux/jobSlice";
-// import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
+import { Button } from "./ui/button";
+import CategoryCarousel from "./CategoryCarousel";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSearchedQuery } from "@/redux/jobSlice";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
-  // const [query, setQuery] = useState("");
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // const searchJobHandler = () => {
-  //   dispatch(setSearchedQuery(query));
-  //   navigate("/browse");
-  // }
+  const searchJobHandler = () => {
+    dispatch(setSearchedQuery(query));
+    navigate("/browse");
+  }
 
   return (
     <section
@@ -39,7 +39,7 @@ function HeroSection() {
         <p>
           {t("onlineIn5")}
         </p>
-        {/* <div className="flex w-full max-w-lg mx-auto lg:mx-0 h-10 shadow-lg border border-gray-200 pl-3 rounded-full items-center gap-4">
+        <div className="flex w-full max-w-lg mx-auto lg:mx-0 h-10 shadow-lg border border-gray-200 pl-3 rounded-full items-center gap-4">
           <input
             type="text"
             placeholder={t("findTheMaidOrNurses")}
@@ -49,8 +49,8 @@ function HeroSection() {
           <Button onClick={searchJobHandler} className="rounded-r-full bg-[#45cfc1]">
             <Search className="h-5 w-5 text-white" />
           </Button>
-        </div> */}
-        {/* <CategoryCarousel /> */}
+        </div>
+        <CategoryCarousel />
       </div>
 
       {/* Right Side Image */}

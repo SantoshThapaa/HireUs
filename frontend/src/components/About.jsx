@@ -78,7 +78,7 @@ const FAQ = () => {
                                     </button>
                                 </div>
 
-                                {/* Answer Section (only visible when open) */}
+                                
                                 {openIndex === index && (
                                     <div className="p-4 bg-[#daeae4] border-t">
                                         <p className="text-gray-600">{faq.answer}</p>
