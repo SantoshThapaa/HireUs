@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const FAQ = () => {
+export const FAQ = () => {
     const { t } = useTranslation();
 
     const faqs = [
@@ -93,4 +93,4 @@ const FAQ = () => {
     );
 };
 
-export default FAQ;
+
