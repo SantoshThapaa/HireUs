@@ -13,8 +13,8 @@ import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import Nav from '../shared/Nav';
-// import { useGoogleLogin } from '@react-oauth/google';
-// import { googleAuth } from '@/api';
+import { useGoogleLogin } from '@react-oauth/google';
+import { googleAuth } from '@/api';
 
 const Login = () => {
     const { t } = useTranslation();
