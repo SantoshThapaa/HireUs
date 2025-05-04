@@ -26,7 +26,6 @@ const MaidServiceSection = () => {
                 </Link>
             </div>
 
-            {/* Image/Video Section */}
             <div className="w-full md:w-1/2 mt-8 md:mt-0 flex justify-center relative">
                 <div className="relative">
                     {/* Yellow Border */}
