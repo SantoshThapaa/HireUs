@@ -65,7 +65,6 @@ const Browse = () => {
       <Navbar />
       <div className="max-w-7xl mx-auto mt-5">
         <div className="flex gap-5">
-          {/* Job Cards Section */}
           <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
             <h1 className="font-bold text-xl my-10">
               Search Results ({filterJobs.length || 0})
